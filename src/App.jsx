@@ -11,7 +11,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { services, phone, displayPhone, whatsappUrl } from "./content.js";
 
-const IceWorld = lazy(() => import("./IceWorld.jsx"));
+const WeddingStage = lazy(() => import("./WeddingStage.jsx"));
 
 gsap.registerPlugin(ScrollTrigger);
 const Arrow = ({ diagonal = false, ...props }) => (
@@ -465,7 +465,7 @@ export default function App() {
           <div className={`hero immersive-hero phase-${phase}`}>
             <div className="hero-scene">
               <Suspense fallback={null}>
-                <IceWorld
+                <WeddingStage
                   reduced={reduced}
                   onReady={onReady}
                   onPhase={onPhase}
@@ -508,27 +508,30 @@ export default function App() {
               <span className="mono">
                 {
                   [
-                    "001 / ENTER OUR WORLD",
-                    "002 / OPEN POSSIBILITIES",
-                    "003 / THE ART OF CONNECTION",
+                    "001 / THE EMPTY CANVAS",
+                    "002 / SETTING THE SCENE",
+                    "003 / EVERY LITTLE DETAIL",
+                    "004 / THE FINAL REVEAL",
                   ][phase]
                 }
               </span>
               <h1 id="hero-heading">
                 {
                   [
-                    "Beyond ordinary.",
-                    "Break the expected.",
-                    "Make it memorable.",
+                    "It starts with a vision.",
+                    "A little theatre.",
+                    "Made with love.",
+                    "Your moment. Made.",
                   ][phase]
                 }
               </h1>
               <p className="mono">
                 {
                   [
-                    "CREATING EXPERIENCES. CRAFTING MEMORIES.",
-                    "YOUR VISION. OUR EXPERTISE. NO LIMITS.",
-                    "MEETINGS / INCENTIVES / CONFERENCES / EVENTS",
+                    "AN EMPTY STAGE. ENDLESS POSSIBILITIES.",
+                    "CRIMSON DRAPES. A BEAUTIFUL BEGINNING.",
+                    "FLOWERS. TEXTURES. THOUGHTFUL DETAILS.",
+                    "THE LIGHTS COME ON. THE MEMORY BEGINS.",
                   ][phase]
                 }
               </p>
@@ -544,16 +547,24 @@ export default function App() {
               <SoundToggle />
               <button
                 className="scroll-cue mono"
-                onClick={() => navigate("#about")}
+                onClick={() => {
+                  if (phase === 3 || reduced) navigate("#about");
+                  else {
+                    const journey = document.querySelector(".journey");
+                    const target = journey.offsetTop + (journey.offsetHeight - innerHeight) * [0.25, 0.55, 0.97][phase];
+                    if (lenis.current) lenis.current.scrollTo(target);
+                    else window.scrollTo({ top: target, behavior: "smooth" });
+                  }
+                }}
               >
                 <span className="scroll-line" />
-                {phase === 2
+                {phase === 3
                   ? "DISCOVER MICEFACTORY"
-                  : "SCROLL TO EXPLORE"}{" "}
+                  : "SCROLL TO CREATE"}{" "}
                 <span>↓</span>
               </button>
               <span className="world-index mono">
-                0{phase + 1} <span>/ 03</span>
+                0{phase + 1} <span>/ 04</span>
               </span>
             </div>
           </div>

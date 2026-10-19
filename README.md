@@ -2,7 +2,7 @@
 
 A responsive event studio website built with React, Vite, Three.js, GSAP and Lenis.
 
-The opening scene follows the supplied Igloo reference video: an assembling ice structure in a generated landscape, a scroll-driven overhead portal, and a floating M monogram. All geometry, frost textures, snow and ambient audio are generated locally. The rest of the site presents MICEFACTORY's services, imagery and profile from the supplied brochure.
+The opening scene is a reversible, scroll-driven wedding-stage transformation: empty venue, crimson drapes, floral details, then a warmly lit final reveal. The supplied wedding photo guides the generated landscape artwork. Layered image masks animate the build without requiring WebGL. On mobile the stage retains its landscape framing. The rest of the site presents MICEFACTORY's services, imagery and profile from the supplied brochure.
 
 ## Run locally
 
@@ -57,21 +57,22 @@ npm run build
 npm run test:smoke
 ```
 
-The Playwright suite starts a production preview (or reuses one), checks all three scene chapters, every service dialog, keyboard/focus behavior, brochure availability, image loading, enquiry validation and URL encoding, mobile overflow, sound controls, reduced motion, and WebGL fallback. It stubs `window.open`, so tests never send messages or contact the business.
+The Playwright suite starts a production preview (or reuses one), checks all four wedding-stage chapters and reverse scrolling, every service dialog, keyboard/focus behavior, brochure availability, image loading, enquiry validation and URL encoding, mobile overflow, sound controls, reduced motion, and operation without WebGL. It stubs `window.open`, so tests never send messages or contact the business.
 
 The cloud environment supplies Chromium at `/usr/bin/chromium`. Elsewhere, run `npx playwright install chromium`, or set `CHROMIUM_PATH` to an installed Chromium executable. Linux hosts may also need `npx playwright install --with-deps chromium`.
 
 ## Content and design
 
-- `src/IceWorld.jsx`: procedural WebGL scene, camera journey, particles and performance limits.
+- `src/WeddingStage.jsx`: scroll-driven photographic layers, progress and reduced-motion handling.
+- `src/assets/`: landscape wedding final and matching empty-stage artwork.
 - `src/App.jsx`: sections, dialogs, navigation, audio and enquiry form.
 - `src/content.js`: services and confirmed contact configuration.
 - `src/styles.css`: responsive presentation and motion preferences.
 - `public/images/`: original page imagery extracted from the supplied PDF. CSS viewports crop photography without stretching it.
 - `public/micefactory-events.pdf`: original company profile, including its original (incomplete) printed contact number. The website uses the corrected number.
 
-The uploaded video guided the visual and motion reconstruction because direct access to `igloo.inc` was blocked by the environment's network proxy. This is a custom implementation, not the original site's source or 3D assets. Self-hosted Manrope and IBM Plex Mono approximate its typography; an exact font match has not been verified. Brochure imagery illustrates the business's offering and is not labeled as a verified client project portfolio.
+The wedding scene supersedes the earlier ice/portal reference. The reference-inspired artwork is a design visualization, not a claim of a completed client event. Self-hosted Manrope and IBM Plex Mono remain in use.
 
-The scene pauses outside the viewport, while a dialog is open, and when the browser is hidden. Ice blocks are instanced, rendering is capped at 30 fps, and software renderers use a smaller pixel ratio. OS reduced-motion preferences disable the camera journey and continuous animation. A static fallback retains navigation and content when WebGL is unavailable. Sound is off until explicitly enabled.
+OS reduced-motion preferences show the finished stage immediately without an extended scroll journey. Sound stays off until explicitly enabled. Image assets are bundled locally, including in the portable export.
 
 Each cloud task already has an isolated checkout. Reuse it; do not create a Git worktree unless explicitly requested.

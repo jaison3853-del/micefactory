@@ -10,22 +10,30 @@ test("only the confirmed complete phone number is used for enquiries", () => {
   expect(link.searchParams.get("text")).toBe("A celebration & a new beginning");
 });
 
-test("three scroll chapters render and respond without JavaScript errors", async ({
+test("wedding stage builds through four chapters and reverses without errors", async ({
   page,
 }) => {
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await expect(page.locator(".is-ready")).toBeAttached();
-  await expect(page.locator("canvas")).toHaveCount(1);
-  await expect(page.locator("h1")).toHaveText("Beyond ordinary.");
+  await expect(page.locator(".stage-bare")).toBeVisible();
+  await expect.poll(() => page.locator(".stage-bare").evaluate(img => img.complete && img.naturalWidth > 0)).toBeTruthy();
+  await expect.poll(() => page.locator(".stage-finish").evaluate(img => img.complete && img.naturalWidth > 0)).toBeTruthy();
+  await expect(page.locator("h1")).toHaveText("It starts with a vision.");
   const travel = await page
     .locator(".journey")
     .evaluate((el) => el.offsetHeight - innerHeight);
-  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.48);
-  await expect(page.locator("h1")).toHaveText("Break the expected.");
-  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.92);
-  await expect(page.locator("h1")).toHaveText("Make it memorable.");
+  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.25);
+  await expect(page.locator("h1")).toHaveText("A little theatre.");
+  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.97);
+  await expect(page.locator("h1")).toHaveText("Your moment. Made.");
+  await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
+  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.55);
+  await expect(page.locator("h1")).toHaveText("Made with love.");
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(page.locator("h1")).toHaveText("It starts with a vision.");
+  await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(0);
   expect(errors).toEqual([]);
 });
 
@@ -126,6 +134,10 @@ test("mobile layouts, reduced motion, sound and navigation remain usable", async
       .locator(".journey")
       .evaluate((el) => el.offsetHeight <= innerHeight + 1),
   ).toBe(true);
+  await expect(page.locator("h1")).toHaveText("Your moment. Made.");
+  await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
+  const frame = await page.locator(".stage-frame").boundingBox();
+  expect(frame.width / frame.height).toBeCloseTo(16 / 9, 1);
   for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 844 });
     expect(
@@ -170,7 +182,7 @@ test("WebGL-unavailable devices still get content and navigation", async ({
     };
   });
   await page.goto("/");
-  await expect(page.locator(".scene-fallback")).toBeVisible();
+  await expect(page.locator(".wedding-scene")).toBeVisible();
   await expect(page.locator(".is-ready")).toBeAttached();
   await page.getByRole("button", { name: "[ EXPLORE EXPERIENCES ↗ ]" }).click();
   await expect(page.locator(".service-row").first()).toBeInViewport();

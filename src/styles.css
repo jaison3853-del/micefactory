@@ -2463,3 +2463,43 @@ button {
     height: 55px;
   }
 }
+
+/* A photographic wedding build, from an empty venue to the final reveal. */
+.journey { height: 460svh; background: #150b0a; }
+.immersive-hero { background: #150b0a; color: #fff4e8; }
+.wedding-scene { position: absolute; inset: 0; --drapes: 0; --flowers: 0; --finish: 0; --lights: 0; --progress: 0; }
+.stage-frame { position: absolute; inset: 0; overflow: hidden; }
+.stage-image { position: absolute; width: 100%; height: 100%; inset: 0; object-fit: cover; object-position: center; }
+.stage-drapes { opacity: var(--drapes); mask-image: linear-gradient(#000 0%, #000 24%, transparent 55%); transform: translateY(calc((1 - var(--drapes)) * -5%)); filter: brightness(.65); }
+.stage-flowers { opacity: var(--flowers); mask-image: linear-gradient(90deg, #000 0%, #000 32%, transparent 44%, transparent 56%, #000 68%, #000 100%); filter: brightness(.7); transform: scale(calc(1.04 - var(--flowers) * .04)); }
+.stage-finish { opacity: var(--finish); filter: brightness(calc(.7 + var(--lights) * .3)); }
+.stage-light { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 30%, #ffd18a12, transparent 65%); opacity: var(--lights); pointer-events: none; }
+.stage-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: #f2d4a520; z-index: 5; }
+.stage-progress span { display: block; height: 100%; background: #e8c28c; transform: scaleX(var(--progress)); transform-origin: left; }
+.world-vignette { background: linear-gradient(180deg, #160907a6, transparent 25%, transparent 52%, #160907d9 100%); }
+.world-manifesto, .world-reticle { display: none; }
+.world-copyright { top: 115px; font-size: 8px; }
+.world-heading { bottom: 110px; text-shadow: 0 2px 25px #1b0909; }
+.world-heading h1 { font-size: clamp(32px, 4.1vw, 66px); }
+.world-heading > span { color: #f6d29c; opacity: 1; }
+.world-coordinates { bottom: 115px; }
+.immersive-hero .scroll-line:after { background: #ebc48f; }
+.reduced-motion .journey { height: 100svh; }
+@media (max-width: 759px) {
+  .journey { height: 380svh; }
+  .immersive-hero { min-height: 540px; }
+  .stage-frame { top: 23%; bottom: auto; width: 100%; aspect-ratio: 16 / 9; }
+  .stage-image { object-fit: cover; }
+  .world-vignette { background: linear-gradient(180deg, #150b0a33, transparent 30%, transparent 48%, #150b0a88 66%); }
+  .world-copyright { top: 105px; font-size: 6px; }
+  .world-heading { bottom: 155px; }
+  .world-heading h1 { font-size: 9vw; }
+  .world-coordinates { bottom: 90px; }
+  .reduced-motion .journey { height: 100svh; min-height: 540px; }
+}
+@media (max-width: 759px) and (max-height: 650px) {
+  .stage-frame { top: 24%; }
+  .world-heading { bottom: 115px; }
+  .world-heading > p { margin-top: 8px; }
+  .world-coordinates { bottom: 72px; }
+}
