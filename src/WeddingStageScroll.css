@@ -46,3 +46,14 @@
 @media (prefers-reduced-motion: reduce) {
   .stage-scroll-experience .stage-scroll-cinematic-glow { display: none; }
 }
+/* An unavailable film stays a still reference, never a simulated build. */
+.stage-scroll-experience .stage-photo-finish { opacity: 1; }
+.stage-scroll-experience.stage-fallback .stage-scrub-canvas { opacity: 0; }
+.stage-scroll-experience .stage-retry { position:absolute; z-index:8; right:var(--gutter); top:110px; padding:12px; color:#fff1da; font-size:9px; background:#150d0bc9; border:1px solid #ddc69e55; pointer-events:auto; }
+.stage-scroll-experience .stage-loading { bottom:88px; }
+@media(max-width:759px) {
+  .stage-scroll-experience .stage-frame { inset:0; width:100%; height:100%; aspect-ratio:auto; background:#100a09; }
+  .stage-scroll-experience .stage-plane { width:100%; height:auto; aspect-ratio:16/9; }
+  .stage-scroll-experience .stage-retry { top:105px; font-size:7px; padding:8px; }
+  .stage-scroll-experience .stage-loading { bottom:115px; }
+}

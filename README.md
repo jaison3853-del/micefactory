@@ -2,7 +2,7 @@
 
 A responsive event studio website built with React, Vite, Three.js, GSAP and Lenis.
 
-The opening scene builds a wedding venue in four viewport-height chapters: the bare venue is dressed in crimson fabric, flowers and seating develop from the stage down the aisle, the complete stage is revealed, and the final chapter plays the first five seconds of the supplied stage film. Its audio stream is removed during encoding. Playback pauses offscreen/when hidden; reduced-motion mode offers a play button. The page ends in a dark cosmic monogram-to-wordmark animation; a further downward wheel, touch swipe or keyboard scroll at the end restarts the experience. A restart button is also available. Aligned photographic layers use broad feathered reveals with scroll smoothing; individual flying cutouts are removed. Reverse scrolling undoes the construction. Mobile retains the landscape frame and reduced-motion mode shows the final stage immediately. The remaining site presents services and the company brochure.
+The feature branch `feature/scroll-stage-construction` uses paused native MP4 seeking and canvas presentation for a 64-second construction film. Scroll position is the only playback clock; reversing scroll reverses the build. Desktop/mobile variants are loaded from `public/media/`. The actual ZIP assets have not yet arrived in this workspace; required filenames and encoding checks are documented in [public/media/README.md](public/media/README.md). A stable reference poster and retry control remain usable when media is unavailable. The cosmic outro, services, navigation and contact flow are preserved. Production must not be replaced until the real assets have been integrated and checked.
 
 ## Run locally
 
@@ -57,13 +57,17 @@ npm run build
 npm run test:smoke
 ```
 
-The Playwright suite starts a production preview (or reuses one), checks all four wedding-stage chapters and reverse scrolling, every service dialog, keyboard/focus behavior, brochure availability, image loading, enquiry validation and URL encoding, mobile overflow, sound controls, reduced motion, and operation without WebGL. It stubs `window.open`, so tests never send messages or contact the business.
+The Playwright suite starts a production preview (or reuses one), checks native-video forward/reverse seeking, media errors and reduced-motion switching, every service dialog, keyboard/focus behavior, brochure availability, image loading, enquiry validation and URL encoding, mobile overflow, sound controls, reduced motion, and operation without WebGL. It stubs `window.open`, so tests never send messages or contact the business.
+
+The video-player tests require FFmpeg with libx264 and generate a clearly labeled 64-second codec fixture in temporary storage. This fixture is not construction footage and is never deployed. These tests verify playback mechanics, not the realism or quality of the missing source film. Physical iPhone/Android verification remains necessary with the real files.
 
 The cloud environment supplies Chromium at `/usr/bin/chromium`. Elsewhere, run `npx playwright install chromium`, or set `CHROMIUM_PATH` to an installed Chromium executable. Linux hosts may also need `npx playwright install --with-deps chromium`.
 
 ## Content and design
 
-- `src/WeddingStage.jsx`: scroll-driven photographic layers, progress and reduced-motion handling.
+- `src/WeddingStage.jsx`: paused-video seek queue, canvas presentation, progress and reduced-motion handling.
+- `src/WeddingStageScroll.css`: isolated construction-player styling.
+- `public/media/`: required desktop/mobile construction films.
 - `src/assets/`: landscape wedding final and matching empty-stage artwork.
 - `src/App.jsx`: sections, dialogs, navigation, audio and enquiry form.
 - `src/content.js`: services and confirmed contact configuration.
