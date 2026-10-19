@@ -2521,3 +2521,13 @@ button {
 .stage-bare { filter: brightness(.83) saturate(.8); }
 .reduced-motion .journey { height: 100svh; }
 @media (max-width: 759px) { .journey { height: 400svh; } .reduced-motion .journey { height: 100svh; } }
+
+/* Continuous three-chapter construction with feathered depth reveals. */
+.journey { height: 300svh; }
+.stage-fabric { mask-image: linear-gradient(to bottom, #000 calc(var(--fabric-edge, -28%) - 24%), transparent var(--fabric-edge, -28%)); }
+.stage-finish { mask-image: linear-gradient(to bottom, #000 calc(var(--floral-edge, -28%) - 24%), transparent var(--floral-edge, -28%)); }
+.stage-bare { filter: brightness(.88) saturate(.9); }
+.stage-fabric { filter: brightness(.88); }
+.stage-finish { filter: brightness(calc(.78 + var(--lights) * .22)); }
+.reduced-motion .journey { height: 100svh; }
+@media (max-width: 759px) { .journey { height: 300svh; } .reduced-motion .journey { height: 100svh; } }

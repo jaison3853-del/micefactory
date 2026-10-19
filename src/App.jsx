@@ -509,9 +509,8 @@ export default function App() {
                 {
                   [
                     "001 / THE EMPTY CANVAS",
-                    "002 / SETTING THE SCENE",
-                    "003 / EVERY LITTLE DETAIL",
-                    "004 / THE FINAL REVEAL",
+                    "002 / COMING TO LIFE",
+                    "003 / THE FINAL REVEAL",
                   ][phase]
                 }
               </span>
@@ -519,7 +518,6 @@ export default function App() {
                 {
                   [
                     "It starts with a vision.",
-                    "A little theatre.",
                     "Made with love.",
                     "Your moment. Made.",
                   ][phase]
@@ -529,8 +527,7 @@ export default function App() {
                 {
                   [
                     "AN EMPTY STAGE. ENDLESS POSSIBILITIES.",
-                    "CRIMSON DRAPES. A BEAUTIFUL BEGINNING.",
-                    "FLOWERS. TEXTURES. THOUGHTFUL DETAILS.",
+                    "FABRIC UNFOLDS. FLOWERS BLOOM. DETAILS FALL INTO PLACE.",
                     "THE LIGHTS COME ON. THE MEMORY BEGINS.",
                   ][phase]
                 }
@@ -548,23 +545,23 @@ export default function App() {
               <button
                 className="scroll-cue mono"
                 onClick={() => {
-                  if (phase === 3 || reduced) navigate("#about");
+                  if (phase === 2 || reduced) navigate("#about");
                   else {
                     const journey = document.querySelector(".journey");
-                    const target = journey.offsetTop + (journey.offsetHeight - innerHeight) * [0.25, 0.55, 0.97][phase];
+                    const target = journey.offsetTop + (journey.offsetHeight - innerHeight) * [0.48, 0.97][phase];
                     if (lenis.current) lenis.current.scrollTo(target);
                     else window.scrollTo({ top: target, behavior: "smooth" });
                   }
                 }}
               >
                 <span className="scroll-line" />
-                {phase === 3
+                {phase === 2
                   ? "DISCOVER MICEFACTORY"
                   : "SCROLL TO CREATE"}{" "}
                 <span>↓</span>
               </button>
               <span className="world-index mono">
-                0{phase + 1} <span>/ 04</span>
+                0{phase + 1} <span>/ 03</span>
               </span>
             </div>
           </div>

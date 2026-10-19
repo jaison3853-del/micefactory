@@ -2,7 +2,7 @@
 
 A responsive event studio website built with React, Vite, Three.js, GSAP and Lenis.
 
-The opening scene is a reversible, scroll-driven wedding-stage transformation: empty venue, crimson drapes, floral details, then a warmly lit final reveal. The supplied wedding photo guides the generated landscape artwork. Four viewport-height chapters assemble fourteen photographic decoration groups. A full-scene transparent cutout preserves the reference proportions, with translation-only arrivals instead of stretching or spinning individual sprites. Curtains and chandeliers descend, floral pillars fly in from opposite sides, followed by seating, tables and lanterns. The transparent artwork is generated from the supplied design reference in its original landscape composition. A short final lighting blend reconciles the assembled layers with the reference photograph. No WebGL is required. On mobile the stage retains its landscape framing. The rest of the site presents MICEFACTORY's services, imagery and profile from the supplied brochure.
+The opening scene builds a wedding venue in three viewport-height chapters: the bare venue is dressed in crimson fabric, flowers and seating develop from the stage down the aisle, and warm lighting completes the final reference design. Aligned photographic layers use broad feathered reveals with scroll smoothing; individual flying cutouts are removed. Reverse scrolling undoes the construction. Mobile retains the landscape frame and reduced-motion mode shows the final stage immediately. The remaining site presents services and the company brochure.
 
 ## Run locally
 
@@ -57,7 +57,7 @@ npm run build
 npm run test:smoke
 ```
 
-The Playwright suite starts a production preview (or reuses one), checks all four wedding-stage chapters and reverse scrolling, every service dialog, keyboard/focus behavior, brochure availability, image loading, enquiry validation and URL encoding, mobile overflow, sound controls, reduced motion, and operation without WebGL. It stubs `window.open`, so tests never send messages or contact the business.
+The Playwright suite starts a production preview (or reuses one), checks all three wedding-stage chapters and reverse scrolling, every service dialog, keyboard/focus behavior, brochure availability, image loading, enquiry validation and URL encoding, mobile overflow, sound controls, reduced motion, and operation without WebGL. It stubs `window.open`, so tests never send messages or contact the business.
 
 The cloud environment supplies Chromium at `/usr/bin/chromium`. Elsewhere, run `npx playwright install chromium`, or set `CHROMIUM_PATH` to an installed Chromium executable. Linux hosts may also need `npx playwright install --with-deps chromium`.
 

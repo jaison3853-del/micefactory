@@ -10,7 +10,7 @@ test("only the confirmed complete phone number is used for enquiries", () => {
   expect(link.searchParams.get("text")).toBe("A celebration & a new beginning");
 });
 
-test("wedding stage builds through four chapters and reverses without errors", async ({
+test("wedding stage builds through three continuous chapters and reverses without errors", async ({
   page,
 }) => {
   const errors = [];
@@ -24,23 +24,22 @@ test("wedding stage builds through four chapters and reverses without errors", a
   const travel = await page
     .locator(".journey")
     .evaluate((el) => el.offsetHeight - innerHeight);
-  expect(travel / 900).toBeCloseTo(3, 1);
+  expect(travel / 900).toBeCloseTo(2, 1);
   await page.evaluate((y) => window.scrollTo(0, y), travel * 0.25);
-  await expect(page.locator("h1")).toHaveText("A little theatre.");
-  const curtain = page.locator('[data-piece="Left velvet curtain"]');
-  await expect(curtain).toBeVisible();
-  expect(await curtain.evaluate(el => getComputedStyle(el).transform)).not.toBe("matrix(1, 0, 0, 1, 0, 0)");
-  await expect(page.locator('[data-piece="Ivory wedding sofa"]')).toBeHidden();
+  await expect(page.locator("h1")).toHaveText("Made with love.");
+  await expect(page.locator(".stage-fabric")).toBeVisible();
+  await expect.poll(() => page.locator(".stage-fabric").evaluate(img => img.complete && img.naturalWidth > 0)).toBeTruthy();
+  await expect(page.locator(".stage-piece")).toHaveCount(0);
   await page.evaluate((y) => window.scrollTo(0, y), travel * 0.97);
   await expect(page.locator("h1")).toHaveText("Your moment. Made.");
-  await expect(page.locator('.stage-piece[data-settled="true"]')).toHaveCount(14);
+  await expect.poll(() => page.locator(".wedding-scene").evaluate(el => parseFloat(el.style.getPropertyValue("--floral-edge")))) .toBe(128);
   await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
   await page.evaluate((y) => window.scrollTo(0, y), travel * 0.55);
   await expect(page.locator("h1")).toHaveText("Made with love.");
   await page.evaluate(() => window.scrollTo(0, 0));
   await expect(page.locator("h1")).toHaveText("It starts with a vision.");
   await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(0);
-  await expect(page.locator('[data-piece="Left velvet curtain"]')).toBeHidden();
+  await expect.poll(() => page.locator(".wedding-scene").evaluate(el => parseFloat(el.style.getPropertyValue("--fabric-edge")))).toBe(-28);
   expect(errors).toEqual([]);
 });
 
