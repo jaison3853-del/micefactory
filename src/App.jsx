@@ -511,6 +511,7 @@ export default function App() {
                     "001 / THE EMPTY CANVAS",
                     "002 / COMING TO LIFE",
                     "003 / THE FINAL REVEAL",
+                    "004 / LIGHTS. LIFE. CELEBRATION.",
                   ][phase]
                 }
               </span>
@@ -520,6 +521,7 @@ export default function App() {
                     "It starts with a vision.",
                     "Made with love.",
                     "Your moment. Made.",
+                    "Let the evening glow.",
                   ][phase]
                 }
               </h1>
@@ -528,6 +530,7 @@ export default function App() {
                   [
                     "AN EMPTY STAGE. ENDLESS POSSIBILITIES.",
                     "FABRIC UNFOLDS. FLOWERS BLOOM. DETAILS FALL INTO PLACE.",
+                    "EVERY DETAIL IN PLACE. YOUR STAGE IS SET.",
                     "THE LIGHTS COME ON. THE MEMORY BEGINS.",
                   ][phase]
                 }
@@ -545,23 +548,23 @@ export default function App() {
               <button
                 className="scroll-cue mono"
                 onClick={() => {
-                  if (phase === 2 || reduced) navigate("#about");
+                  if (phase === 3 || reduced) navigate("#about");
                   else {
                     const journey = document.querySelector(".journey");
-                    const target = journey.offsetTop + (journey.offsetHeight - innerHeight) * [0.48, 0.97][phase];
+                    const target = journey.offsetTop + (journey.offsetHeight - innerHeight) * [0.48, 0.74, 0.97][phase];
                     if (lenis.current) lenis.current.scrollTo(target);
                     else window.scrollTo({ top: target, behavior: "smooth" });
                   }
                 }}
               >
                 <span className="scroll-line" />
-                {phase === 2
+                {phase === 3
                   ? "DISCOVER MICEFACTORY"
                   : "SCROLL TO CREATE"}{" "}
                 <span>↓</span>
               </button>
               <span className="world-index mono">
-                0{phase + 1} <span>/ 03</span>
+                0{phase + 1} <span>/ 04</span>
               </span>
             </div>
           </div>

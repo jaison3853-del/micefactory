@@ -2531,3 +2531,20 @@ button {
 .stage-finish { filter: brightness(calc(.78 + var(--lights) * .22)); }
 .reduced-motion .journey { height: 100svh; }
 @media (max-width: 759px) { .journey { height: 300svh; } .reduced-motion .journey { height: 100svh; } }
+
+/* Final chapter: gentle moving beams, candle glow and floor reflections. */
+.journey { height: 400svh; }
+.reduced-motion .journey { height: 100svh; }
+.live-stage-lights { position: absolute; inset: 0; pointer-events: none; opacity: var(--live-lights, 0); mix-blend-mode: screen; overflow: hidden; }
+.stage-spotlight { position: absolute; top: 3%; width: 21%; height: 91%; margin-left: -10.5%; transform-origin: 50% 0; animation: stage-beam-sweep var(--duration) ease-in-out var(--delay) infinite alternate; }
+.stage-spotlight i { display: block; width: 100%; height: 100%; clip-path: polygon(49% 0,51% 0,100% 100%,0 100%); background: linear-gradient(180deg, #ffe4b93b, #ffe6c51a 52%, #ffc77000); mask-image: linear-gradient(90deg, transparent, #000 38%, #000 62%, transparent); }
+.stage-spotlight:after { content: ""; position: absolute; width: 6%; aspect-ratio: 1; top: -.3%; left: 47%; border-radius: 50%; background: #fff1d5; box-shadow: 0 0 14px 4px #ffd3998a; opacity: .7; }
+.floor-light-pattern { position: absolute; left: 26%; bottom: -7%; width: 48%; height: 43%; background: radial-gradient(ellipse at 25% 25%,#ffe4a839,transparent 23%),radial-gradient(ellipse at 70% 40%,#ffdca642,transparent 24%),radial-gradient(ellipse at 35% 75%,#ffddae33,transparent 22%); mask-image: radial-gradient(ellipse,#000 30%,transparent 72%); animation: floor-light-drift 9s ease-in-out infinite alternate; }
+.candle-glow { position: absolute; width: 1.8%; aspect-ratio: 1; border-radius: 50%; transform: translate(-50%,-50%); background: radial-gradient(circle,#fff5da7a,#ffbd5a26 35%,transparent 72%); animation: stage-candle-glow 3.8s ease-in-out var(--delay) infinite alternate; }
+.live-stage-lights * { animation-play-state: paused; }
+.lights-running .live-stage-lights * { animation-play-state: running; }
+@keyframes stage-beam-sweep { from { transform: rotate(calc(var(--angle) - 9deg)); opacity: .55; } to { transform: rotate(calc(var(--angle) + 9deg)); opacity: .9; } }
+@keyframes floor-light-drift { from { transform: translate(-5%,2%) rotate(-6deg); opacity: .5; } to { transform: translate(5%,-3%) rotate(6deg); opacity: .85; } }
+@keyframes stage-candle-glow { from { opacity: .4; } to { opacity: .85; } }
+@media (max-width: 759px) { .journey { height: 400svh; } .reduced-motion .journey { height: 100svh; } }
+@media (prefers-reduced-motion: reduce) { .live-stage-lights { display: none; } }

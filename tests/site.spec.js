@@ -10,7 +10,7 @@ test("only the confirmed complete phone number is used for enquiries", () => {
   expect(link.searchParams.get("text")).toBe("A celebration & a new beginning");
 });
 
-test("wedding stage builds through three continuous chapters and reverses without errors", async ({
+test("wedding stage builds through four continuous chapters and reverses without errors", async ({
   page,
 }) => {
   const errors = [];
@@ -24,16 +24,25 @@ test("wedding stage builds through three continuous chapters and reverses withou
   const travel = await page
     .locator(".journey")
     .evaluate((el) => el.offsetHeight - innerHeight);
-  expect(travel / 900).toBeCloseTo(2, 1);
-  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.25);
+  expect(travel / 900).toBeCloseTo(3, 1);
+  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.45);
   await expect(page.locator("h1")).toHaveText("Made with love.");
   await expect(page.locator(".stage-fabric")).toBeVisible();
   await expect.poll(() => page.locator(".stage-fabric").evaluate(img => img.complete && img.naturalWidth > 0)).toBeTruthy();
   await expect(page.locator(".stage-piece")).toHaveCount(0);
-  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.97);
+  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.74);
   await expect(page.locator("h1")).toHaveText("Your moment. Made.");
+  await expect(page.locator(".wedding-scene")).not.toHaveClass(/lights-running/);
+  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.97);
+  await expect(page.locator("h1")).toHaveText("Let the evening glow.");
   await expect.poll(() => page.locator(".wedding-scene").evaluate(el => parseFloat(el.style.getPropertyValue("--floral-edge")))) .toBe(128);
   await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
+  await expect(page.locator(".wedding-scene")).toHaveClass(/lights-running/);
+  const beam = page.locator(".stage-spotlight").first();
+  const firstTransform = await beam.evaluate(el => getComputedStyle(el).transform);
+  await expect.poll(() => beam.evaluate(el => getComputedStyle(el).transform)).not.toBe(firstTransform);
+  await page.evaluate(() => window.scrollTo(0, document.querySelector("#about").offsetTop + 120));
+  await expect(page.locator(".wedding-scene")).not.toHaveClass(/lights-running/);
   await page.evaluate((y) => window.scrollTo(0, y), travel * 0.55);
   await expect(page.locator("h1")).toHaveText("Made with love.");
   await page.evaluate(() => window.scrollTo(0, 0));
@@ -140,8 +149,9 @@ test("mobile layouts, reduced motion, sound and navigation remain usable", async
       .locator(".journey")
       .evaluate((el) => el.offsetHeight <= innerHeight + 1),
   ).toBe(true);
-  await expect(page.locator("h1")).toHaveText("Your moment. Made.");
+  await expect(page.locator("h1")).toHaveText("Let the evening glow.");
   await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
+  await expect(page.locator(".live-stage-lights")).toBeHidden();
   const frame = await page.locator(".stage-frame").boundingBox();
   expect(frame.width / frame.height).toBeCloseTo(16 / 9, 1);
   for (const width of [320, 390, 768, 1440]) {
