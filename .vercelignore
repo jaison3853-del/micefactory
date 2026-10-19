@@ -1,0 +1,6 @@
+.git
+node_modules
+dist
+test-results
+micefactory-preview.html
+*.zip
