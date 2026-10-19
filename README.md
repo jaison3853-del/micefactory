@@ -2,7 +2,7 @@
 
 A responsive event studio website built with React, Vite, Three.js, GSAP and Lenis.
 
-The opening scene is a reversible, scroll-driven wedding-stage transformation: empty venue, crimson drapes, floral details, then a warmly lit final reveal. The supplied wedding photo guides the generated landscape artwork. Layered image masks animate the build without requiring WebGL. On mobile the stage retains its landscape framing. The rest of the site presents MICEFACTORY's services, imagery and profile from the supplied brochure.
+The opening scene is a reversible, scroll-driven wedding-stage transformation: empty venue, crimson drapes, floral details, then a warmly lit final reveal. The supplied wedding photo guides the generated landscape artwork. Twenty-one individual transparent decorations translate, rotate and scale into place in staggered scroll intervals. Curtains and chandeliers descend, floral pillars fly in from opposite sides, followed by seating, tables and lanterns. The transparent artwork is generated from the supplied design reference. A short final lighting blend reconciles the assembled layers with the reference photograph. No WebGL is required. On mobile the stage retains its landscape framing. The rest of the site presents MICEFACTORY's services, imagery and profile from the supplied brochure.
 
 ## Run locally
 

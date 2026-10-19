@@ -2503,3 +2503,13 @@ button {
   .world-heading > p { margin-top: 8px; }
   .world-coordinates { bottom: 72px; }
 }
+
+/* All flying objects share one reference plane, including on portrait screens. */
+.stage-frame { container-type: size; }
+.stage-plane { position: absolute; width: max(100cqw, 177.69cqh); height: max(56.28cqw, 100cqh); left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.stage-piece { transform-origin: center; filter: brightness(calc(.84 + var(--lights) * .16)); }
+.stage-finish { pointer-events: none; }
+
+.stage-piece { position: absolute; transform-origin: center; }
+.decor-crop { position: absolute; inset: 0; overflow: hidden; }
+.decor-crop img { position: absolute; max-width: none; pointer-events: none; }

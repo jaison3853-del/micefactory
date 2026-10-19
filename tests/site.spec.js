@@ -26,14 +26,20 @@ test("wedding stage builds through four chapters and reverses without errors", a
     .evaluate((el) => el.offsetHeight - innerHeight);
   await page.evaluate((y) => window.scrollTo(0, y), travel * 0.25);
   await expect(page.locator("h1")).toHaveText("A little theatre.");
+  const curtain = page.locator('[data-piece="Left velvet curtain"]');
+  await expect(curtain).toBeVisible();
+  expect(await curtain.evaluate(el => getComputedStyle(el).transform)).not.toBe("matrix(1, 0, 0, 1, 0, 0)");
+  await expect(page.locator('[data-piece="Ivory wedding sofa"]')).toBeHidden();
   await page.evaluate((y) => window.scrollTo(0, y), travel * 0.97);
   await expect(page.locator("h1")).toHaveText("Your moment. Made.");
+  await expect(page.locator('.stage-piece[data-settled="true"]')).toHaveCount(21);
   await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
   await page.evaluate((y) => window.scrollTo(0, y), travel * 0.55);
   await expect(page.locator("h1")).toHaveText("Made with love.");
   await page.evaluate(() => window.scrollTo(0, 0));
   await expect(page.locator("h1")).toHaveText("It starts with a vision.");
   await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(0);
+  await expect(page.locator('[data-piece="Left velvet curtain"]')).toBeHidden();
   expect(errors).toEqual([]);
 });
 
