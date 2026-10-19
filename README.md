@@ -2,7 +2,7 @@
 
 A responsive event studio website built with React, Vite, Three.js, GSAP and Lenis.
 
-The opening scene builds a wedding venue in four viewport-height chapters: the bare venue is dressed in crimson fabric, flowers and seating develop from the stage down the aisle, the complete stage is revealed, and a final live-lighting chapter adds moving spotlight beams, candle glow and floor reflections. Motion pauses offscreen and when the tab is hidden; reduced motion disables it. Aligned photographic layers use broad feathered reveals with scroll smoothing; individual flying cutouts are removed. Reverse scrolling undoes the construction. Mobile retains the landscape frame and reduced-motion mode shows the final stage immediately. The remaining site presents services and the company brochure.
+The opening scene builds a wedding venue in four viewport-height chapters: the bare venue is dressed in crimson fabric, flowers and seating develop from the stage down the aisle, the complete stage is revealed, and the final chapter plays the first five seconds of the supplied stage film. Its audio stream is removed during encoding. Playback pauses offscreen/when hidden; reduced-motion mode offers a play button. The page ends in a dark cosmic monogram-to-wordmark animation; a further downward wheel, touch swipe or keyboard scroll at the end restarts the experience. A restart button is also available. Aligned photographic layers use broad feathered reveals with scroll smoothing; individual flying cutouts are removed. Reverse scrolling undoes the construction. Mobile retains the landscape frame and reduced-motion mode shows the final stage immediately. The remaining site presents services and the company brochure.
 
 ## Run locally
 

@@ -11,6 +11,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { services, phone, displayPhone, whatsappUrl } from "./content.js";
 
+const CosmicOutro = lazy(() => import("./CosmicOutro.jsx"));
 const WeddingStage = lazy(() => import("./WeddingStage.jsx"));
 
 gsap.registerPlugin(ScrollTrigger);
@@ -410,6 +411,13 @@ export default function App() {
     };
   }, [reduced]);
 
+  const restartExperience = useCallback(() => {
+    document.querySelector(".header .brand")?.focus({ preventScroll: true });
+    if (lenis.current) lenis.current.scrollTo(0, { immediate: true, force: true });
+    window.scrollTo({ top: 0, behavior: "instant" });
+    requestAnimationFrame(() => ScrollTrigger.update());
+  }, []);
+
   const openInquiry = (service = "") => {
     setMenu(false);
     setActiveService(null);
@@ -511,7 +519,7 @@ export default function App() {
                     "001 / THE EMPTY CANVAS",
                     "002 / COMING TO LIFE",
                     "003 / THE FINAL REVEAL",
-                    "004 / LIGHTS. LIFE. CELEBRATION.",
+                    "004 / THE CELEBRATION IN MOTION",
                   ][phase]
                 }
               </span>
@@ -924,6 +932,8 @@ export default function App() {
           <button onClick={() => navigate("#home")}>BACK TO TOP ↑</button>
         </div>
       </footer>
+
+      <Suspense fallback={null}><CosmicOutro reduced={reduced} onRestart={restartExperience} /></Suspense>
 
       {menu && (
         <Dialog

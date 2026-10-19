@@ -2548,3 +2548,21 @@ button {
 @keyframes stage-candle-glow { from { opacity: .4; } to { opacity: .85; } }
 @media (max-width: 759px) { .journey { height: 400svh; } .reduced-motion .journey { height: 100svh; } }
 @media (prefers-reduced-motion: reduce) { .live-stage-lights { display: none; } }
+
+.stage-film { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .8s ease; pointer-events:none; }
+.stage-film.is-playing { opacity:1; }
+.film-play { position:absolute; z-index:5; left:50%; top:62%; transform:translateX(-50%); color:#fff4dd; background:#1b100bd9; border:1px solid #c9b38c66; padding:14px 20px; font-size:10px; cursor:pointer; pointer-events:auto; }
+.cosmic-outro { height:240svh; background:#030409; position:relative; --rise:0; --logo:0; color:#f3f2ed; }
+.cosmic-screen { height:100svh; position:sticky; top:0; overflow:hidden; display:grid; place-items:center; isolation:isolate; background:radial-gradient(ellipse at 50% 56%,#24243233,transparent 55%),#030409; }
+.cosmic-stars { position:absolute; inset:-15%; z-index:-1; opacity:.65; background-image:radial-gradient(1px 1px at 17px 35px,#fff9 70%,transparent),radial-gradient(1px 1px at 98px 73px,#c9defca8 70%,transparent),radial-gradient(1.5px 1.5px at 42px 151px,#fff7 70%,transparent); background-size:173px 197px,269px 239px,397px 307px; transform:translateY(calc(var(--rise) * -5%)); }
+.cosmic-orbit { position:absolute; width:78vw; height:22vw; top:45%; left:11%; border-radius:50%; transform:rotate(-17deg); border-top:2px solid #f8e7cb88; border-bottom:1px solid #a2b4cf33; box-shadow:0 -12px 34px -18px #ffe5ba,0 8px 55px -35px #c0cde5; opacity:calc(.2 + var(--rise) * .55); z-index:-1; }
+.cosmic-caption { position:absolute; top:16%; font-size:9px; letter-spacing:.26em; color:#b1a99c; text-align:center; }
+.cosmic-m { width:clamp(180px,31vw,450px); color:#eae5d9; filter:drop-shadow(0 0 35px #ddd9c33b); transform:translateY(calc((1 - var(--rise)) * 65vh)) scale(calc(1 - var(--logo) * .6)); opacity:calc(1 - var(--logo)); }
+.cosmic-wordmark { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center; align-items:center; opacity:var(--logo); transform:translateY(calc((1 - var(--logo)) * 45px)); }
+.cosmic-wordmark > span { font-size:clamp(36px,11.8vw,190px); font-weight:800; line-height:1.1; letter-spacing:-.065em; }
+.cosmic-wordmark p { margin-top:20px; font-size:clamp(6px,1.15vw,18px); letter-spacing:.14em; color:#c1beb6; }
+.cosmic-wordmark b { border-left:1px solid #777; padding-left:1em; margin-left:.8em; color:#fff; }
+.cosmic-restart { position:absolute; bottom:10%; font-size:9px; letter-spacing:.16em; padding:16px; color:#c6bca9; z-index:2; }
+.cosmic-restart span { display:block; margin-top:14px; font-size:22px; }
+.cosmic-reduced { height:100svh; }
+@media(max-width:759px) { .cosmic-caption { font-size:7px; } .cosmic-orbit { width:130vw; height:48vw; left:-15%; } .cosmic-wordmark p { letter-spacing:.01em; margin-top:14px; } .cosmic-restart { font-size:7px; } .film-play { font-size:7px; padding:8px 12px; } }

@@ -38,9 +38,11 @@ test("wedding stage builds through four continuous chapters and reverses without
   await expect.poll(() => page.locator(".wedding-scene").evaluate(el => parseFloat(el.style.getPropertyValue("--floral-edge")))) .toBe(128);
   await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
   await expect(page.locator(".wedding-scene")).toHaveClass(/lights-running/);
-  const beam = page.locator(".stage-spotlight").first();
-  const firstTransform = await beam.evaluate(el => getComputedStyle(el).transform);
-  await expect.poll(() => beam.evaluate(el => getComputedStyle(el).transform)).not.toBe(firstTransform);
+  const video = page.locator(".stage-film");
+  await expect.poll(() => video.evaluate(el => el.currentTime)).toBeGreaterThan(.1);
+  expect(await video.evaluate(el => el.muted)).toBe(true);
+  expect(await video.evaluate(el => el.duration)).toBeCloseTo(5, 1);
+  await expect.poll(() => video.evaluate(el => el.ended), {timeout: 8000}).toBe(true);
   await page.evaluate(() => window.scrollTo(0, document.querySelector("#about").offsetTop + 120));
   await expect(page.locator(".wedding-scene")).not.toHaveClass(/lights-running/);
   await page.evaluate((y) => window.scrollTo(0, y), travel * 0.55);
@@ -151,7 +153,8 @@ test("mobile layouts, reduced motion, sound and navigation remain usable", async
   ).toBe(true);
   await expect(page.locator("h1")).toHaveText("Let the evening glow.");
   await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
-  await expect(page.locator(".live-stage-lights")).toBeHidden();
+  expect(await page.locator(".stage-film").evaluate(el => el.paused)).toBe(true);
+  await expect(page.getByRole("button", {name:"PLAY STAGE FILM · 5 SEC ↗"})).toBeVisible();
   const frame = await page.locator(".stage-frame").boundingBox();
   expect(frame.width / frame.height).toBeCloseTo(16 / 9, 1);
   for (const width of [320, 390, 768, 1440]) {
@@ -202,4 +205,26 @@ test("WebGL-unavailable devices still get content and navigation", async ({
   await expect(page.locator(".is-ready")).toBeAttached();
   await page.getByRole("button", { name: "[ EXPLORE EXPERIENCES ↗ ]" }).click();
   await expect(page.locator(".service-row").first()).toBeInViewport();
+});
+
+
+test("cosmic M resolves to the full logo and further scroll restarts the experience", async ({page}) => {
+  await page.goto("/");
+  await expect(page.locator(".cosmic-outro")).toBeAttached();
+  const end = async () => {
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await expect(page.locator(".cosmic-outro")).toHaveAttribute("data-complete", "true");
+    await expect.poll(() => page.locator(".cosmic-wordmark").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
+    await page.waitForTimeout(800);
+  };
+  await end();
+  await page.mouse.wheel(0, 300);
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeLessThan(5);
+  await expect(page.locator("h1")).toHaveText("It starts with a vision.");
+  await end();
+  await page.keyboard.press("PageDown");
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeLessThan(5);
+  await end();
+  await page.getByRole("button", {name:"SCROLL TO BEGIN AGAIN"}).click();
+  await expect.poll(() => page.evaluate(() => scrollY)).toBeLessThan(5);
 });
