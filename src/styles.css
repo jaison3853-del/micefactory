@@ -2513,3 +2513,11 @@ button {
 .stage-piece { position: absolute; transform-origin: center; }
 .decor-crop { position: absolute; inset: 0; overflow: hidden; }
 .decor-crop img { position: absolute; max-width: none; pointer-events: none; }
+
+/* Four chapters; photographic proportions remain unchanged throughout assembly. */
+.journey { height: 400svh; }
+.stage-piece { filter: none; }
+.stage-assembled { opacity: var(--assembly, 0); pointer-events: none; }
+.stage-bare { filter: brightness(.83) saturate(.8); }
+.reduced-motion .journey { height: 100svh; }
+@media (max-width: 759px) { .journey { height: 400svh; } .reduced-motion .journey { height: 100svh; } }
