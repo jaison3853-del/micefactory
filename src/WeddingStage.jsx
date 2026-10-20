@@ -3,10 +3,10 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import finalStage from './assets/wedding-final.webp';
 import './WeddingStageScroll.css';
+import { phaseFor, sequencePlayer, validateManifest } from './stageSequence.js';
 
 gsap.registerPlugin(ScrollTrigger);
 const clamp = value => Math.max(0, Math.min(1, value));
-const phaseFor = p => p < .22 ? 0 : p < .50 ? 1 : p < .78 ? 2 : 3;
 const DESKTOP = import.meta.env.VITE_STAGE_DESKTOP_URL || 'https://ayj0z9uanjiaychq.public.blob.vercel-storage.com/MICEFACTORY_Stage_Construction_4K_UHD.mp4';
 const MOBILE = import.meta.env.VITE_STAGE_MOBILE_URL || '/media/wedding-stage-scroll-mobile.mp4';
 
@@ -26,6 +26,11 @@ export default function WeddingStage({ reduced = false, onReady, onPhase }) {
     const ctx = cvs.getContext('2d', { alpha: false, desynchronized: true });
     let destroyed = false, inView = true, pendingRaf = 0, frameCallback = null;
     let target = 0, lastPhase = -1, loadTimer = null, animation = null, statusValue = "";
+    let sequence = null;
+    const manifestAbort = new AbortController();
+    el.dataset.mode = 'fallback';
+    el.dataset.cacheBytes = '0'; el.dataset.cacheFrames = '0';
+    delete el.dataset.frame; delete el.dataset.targetFrame;
     el.classList.remove('has-frames', 'stage-fallback', 'stage-reduced');
     cvs.width = 1; cvs.height = 1;
     const changeStatus = value => {
@@ -37,6 +42,7 @@ export default function WeddingStage({ reduced = false, onReady, onPhase }) {
     const desiredTime = () => Number.isFinite(vid.duration) && vid.duration > 0
       ? Math.min(target * vid.duration, Math.max(0, vid.duration - 1 / 30)) : 0;
     const drawFrame = () => {
+      if (sequence) { if (active()) sequence.draw(); return; }
       if (!active() || !ctx || vid.readyState < 2 || !vid.videoWidth || vid.seeking) return;
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       const maxWidth = mobile ? 960 : Math.min(3840, Math.max(1920, Math.round(window.innerWidth * dpr)));
@@ -63,6 +69,7 @@ export default function WeddingStage({ reduced = false, onReady, onPhase }) {
     };
     const seekFrame = () => {
       pendingRaf = 0;
+      if (sequence) { if (active()) sequence.draw(); return; }
       if (!active() || vid.readyState < 1 || !Number.isFinite(vid.duration) || vid.duration <= 0 || vid.seeking) return;
       const desired = desiredTime();
       el.dataset.targetTime = desired.toFixed(3);
@@ -82,6 +89,7 @@ export default function WeddingStage({ reduced = false, onReady, onPhase }) {
       vid.pause(); changeStatus('unavailable'); callbacks.current.onReady?.();
     };
     const visibility = () => {
+      sequence?.pause(!active());
       if (active()) schedule();
       else {
         cancelAnimationFrame(pendingRaf); pendingRaf = 0;
@@ -91,6 +99,7 @@ export default function WeddingStage({ reduced = false, onReady, onPhase }) {
     };
     const update = progress => {
       target = clamp(progress);
+      sequence?.update(target);
       el.style.setProperty('--progress', target);
       el.style.setProperty('--reveal', clamp((target - .88) / .12));
       const phase = phaseFor(target);
@@ -113,9 +122,27 @@ export default function WeddingStage({ reduced = false, onReady, onPhase }) {
       callbacks.current.onReady?.();
     } else {
       changeStatus('loading');
-      vid.muted = true; vid.defaultMuted = true; vid.playsInline = true;
-      vid.preload = 'auto'; vid.crossOrigin = 'anonymous'; vid.src = mobile ? MOBILE : DESKTOP; vid.load();
-      loadTimer = setTimeout(fail, 60000);
+      loadTimer = setTimeout(() => { manifestAbort.abort(); fail(); }, 60000);
+      fetch('/stage-sequence/manifest.json', {signal:manifestAbort.signal, cache:'no-cache'})
+        .then(response => { if (!response.ok) throw new Error('Manifest unavailable'); return response.json(); })
+        .then(value => {
+          if (destroyed) return;
+          const manifest = validateManifest(value);
+          if (manifest) {
+            el.dataset.mode = 'sequence';
+            sequence = sequencePlayer({manifest, mobile, canvas:cvs, node:el, changed:schedule, ready:ok => {
+              clearTimeout(loadTimer);
+              if (ok) el.classList.remove('stage-fallback');
+              changeStatus(ok ? 'ready' : 'frame-unavailable');
+              callbacks.current.onReady?.();
+            }});
+            sequence.pause(!active()); sequence.update(target); schedule();
+          } else {
+            el.dataset.mode = 'video';
+            vid.muted = true; vid.defaultMuted = true; vid.playsInline = true;
+            vid.preload = 'auto'; vid.crossOrigin = 'anonymous'; vid.src = mobile ? MOBILE : DESKTOP; vid.load();
+          }
+        }).catch(() => { if (!destroyed) { el.dataset.mode = 'fallback'; fail(); } });
     }
     if (!reduced) {
       const state = { value: 0 };
@@ -127,6 +154,7 @@ export default function WeddingStage({ reduced = false, onReady, onPhase }) {
     }
     return () => {
       destroyed = true; clearTimeout(loadTimer); cancelAnimationFrame(pendingRaf);
+      manifestAbort.abort(); sequence?.destroy();
       if (frameCallback !== null) vid.cancelVideoFrameCallback?.(frameCallback);
       animation?.scrollTrigger?.kill(); animation?.kill(); observer.disconnect();
       document.removeEventListener('visibilitychange', visibility);
@@ -145,6 +173,6 @@ export default function WeddingStage({ reduced = false, onReady, onPhase }) {
     </div></div>
     <div className="stage-progress" aria-hidden="true"><span /></div>
     {status === 'loading' && <span className="stage-loading mono" role="status">PREPARING THE EXPERIENCE</span>}
-    {status === 'unavailable' && <button className="stage-retry mono" onClick={() => setRetry(n => n + 1)}>RETRY EXPERIENCE ↻</button>}
+    {(status === 'unavailable' || status === 'frame-unavailable') && <button className="stage-retry mono" onClick={() => setRetry(n => n + 1)}>RETRY EXPERIENCE ↻</button>}
   </div>;
 }

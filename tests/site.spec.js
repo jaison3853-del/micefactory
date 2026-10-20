@@ -21,7 +21,7 @@ test("missing construction footage keeps a stable poster and a recoverable state
   const travel = await page.locator(".journey").evaluate(el => el.offsetHeight-innerHeight);
   expect(travel/900).toBeCloseTo(6,1);
   await page.evaluate(y=>scrollTo(0,y),travel);
-  await expect(page.locator("h1")).toHaveText("Let the evening glow.");
+  await expect(page.locator("h1")).toHaveText("MICEFACTORY EVENTS");
   await expect(page.locator(".stage-photo-finish")).toHaveCSS("opacity","1");
   await page.evaluate(()=>scrollTo(0,0));
   await expect(page.locator("h1")).toHaveText("It starts with a vision.");
@@ -124,7 +124,7 @@ test("mobile layouts, reduced motion, sound and navigation remain usable", async
       .locator(".journey")
       .evaluate((el) => el.offsetHeight <= innerHeight + 1),
   ).toBe(true);
-  await expect(page.locator("h1")).toHaveText("Let the evening glow.");
+  await expect(page.locator("h1")).toHaveText("MICEFACTORY EVENTS");
   await expect(page.locator(".stage-photo-finish")).toHaveCSS("opacity","1");
   expect(await page.locator(".stage-scrub-source").evaluate(el=>el.paused && !el.getAttribute("src"))).toBe(true);
   const frame = await page.locator(".stage-plane").boundingBox();

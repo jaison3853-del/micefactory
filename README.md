@@ -80,3 +80,7 @@ The wedding scene supersedes the earlier ice/portal reference. The reference-ins
 OS reduced-motion preferences show the finished stage immediately without an extended scroll journey. Sound stays off until explicitly enabled. Image assets are bundled locally, including in the portable export.
 
 Each cloud task already has an isolated checkout. Reuse it; do not create a Git worktree unless explicitly requested.
+
+## Optional construction image sequence
+
+The current film remains configured. To use reviewed, fixed-camera construction footage as a progressively loaded WebP/AVIF sequence, follow [the source and delivery contract](docs/wedding-sequence.md). The seven-stage hero ends with MICEFACTORY EVENTS / FROM VISION TO REALITY. Sequence loading uses a bounded decoded-frame cache, two concurrent requests, reverse seeking and the existing photographic fallback. Test fixtures verify rendering mechanics, not the realism of the footage.
