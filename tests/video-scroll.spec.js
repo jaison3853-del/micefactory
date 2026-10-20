@@ -74,3 +74,29 @@ test('reduced motion skips media and runtime motion toggle restores seeking',asy
   await expect(page.locator('.stage-scroll-experience')).not.toHaveClass(/has-frames/);
   expect(await page.locator('.stage-scrub-source').evaluate(v=>!v.getAttribute('src'))).toBe(true);
 });
+
+for (const mobile of [false, true]) {
+  test(`supplied construction film: seven stages forward/reverse and HTTP ranges (${mobile ? 'mobile' : 'desktop'})`, async ({page}) => {
+    test.setTimeout(60000);
+    if (mobile) await page.setViewportSize({width:390,height:844});
+    const errors=[];page.on('pageerror', e=>errors.push(e.message));
+    await page.goto('/');
+    await expect(page.locator('.stage-scroll-experience')).toHaveAttribute('data-state','ready');
+    const source=page.locator('.stage-scrub-source');
+    expect(await source.evaluate(v=>v.duration)).toBeCloseTo(64,1);
+    expect(await source.evaluate(v=>v.videoWidth)).toBe(mobile?768:1280);
+    const times = [0,.125,.25,.375,.5,.625,.75,.875,1,.75,.5,.25,0];
+    for(const p of times) {
+      await seek(page,p);
+      await expect.poll(()=>page.locator('.stage-scroll-experience').evaluate((el,t)=>Math.abs(Number(el.dataset.renderedTime)-t), Math.min(p*64,64-1/30))).toBeLessThan(.15);
+    }
+    expect(await source.evaluate(v=>v.paused&&v.muted&&v.playsInline)).toBe(true);
+    const path=mobile?'/media/wedding-stage-scroll-mobile.mp4':'/media/wedding-stage-scroll.mp4';
+    const range=await page.request.get(path,{headers:{Range:'bytes=0-1023'}});
+    expect(range.status()).toBe(206);
+    expect((await range.body()).length).toBe(1024);
+    expect(range.headers()['content-type']).toContain('video/mp4');
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    expect(errors).toEqual([]);
+  });
+}

@@ -2,7 +2,7 @@
 
 A responsive event studio website built with React, Vite, Three.js, GSAP and Lenis.
 
-The feature branch `feature/scroll-stage-construction` uses paused native MP4 seeking and canvas presentation for a 64-second construction film. Scroll position is the only playback clock; reversing scroll reverses the build. Desktop/mobile variants are loaded from `public/media/`. The actual ZIP assets have not yet arrived in this workspace; required filenames and encoding checks are documented in [public/media/README.md](public/media/README.md). A stable reference poster and retry control remain usable when media is unavailable. The cosmic outro, services, navigation and contact flow are preserved. Production must not be replaced until the real assets have been integrated and checked.
+The feature branch `feature/scroll-stage-construction` uses paused native MP4 seeking and canvas presentation for a 64-second construction film. Scroll position is the only playback clock; reversing scroll reverses the build. Desktop/mobile variants are loaded from `public/media/`. The supplied 64-second desktop/mobile films and matching poster are integrated; encoding details are documented in [public/media/README.md](public/media/README.md). A stable reference poster and retry control remain usable when media is unavailable. The cosmic outro, services, navigation and contact flow are preserved.
 
 ## Run locally
 
@@ -59,7 +59,7 @@ npm run test:smoke
 
 The Playwright suite starts a production preview (or reuses one), checks native-video forward/reverse seeking, media errors and reduced-motion switching, every service dialog, keyboard/focus behavior, brochure availability, image loading, enquiry validation and URL encoding, mobile overflow, sound controls, reduced motion, and operation without WebGL. It stubs `window.open`, so tests never send messages or contact the business.
 
-The video-player tests require FFmpeg with libx264 and generate a clearly labeled 64-second codec fixture in temporary storage. This fixture is not construction footage and is never deployed. These tests verify playback mechanics, not the realism or quality of the missing source film. Physical iPhone/Android verification remains necessary with the real files.
+The video-player tests require FFmpeg with libx264 and generate a clearly labeled 64-second codec fixture in temporary storage. This fixture is not construction footage and is never deployed. These tests verify playback mechanics, not artistic realism. Additional tests exercise the actual supplied videos through forward and reverse seeks and HTTP range requests. Physical iPhone/Android verification remains necessary with the real files.
 
 The cloud environment supplies Chromium at `/usr/bin/chromium`. Elsewhere, run `npx playwright install chromium`, or set `CHROMIUM_PATH` to an installed Chromium executable. Linux hosts may also need `npx playwright install --with-deps chromium`.
 

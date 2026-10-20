@@ -1,14 +1,16 @@
-# Required construction media
+# Integrated construction media
 
-The user-supplied ZIP is not present in this workspace yet. Do not substitute the existing five-second final-stage clip or synthetic test footage for the construction film.
+Source: user-provided `MICEFACTORY_Codex_Scroll_Integration.zip` (20 October 2026).
 
-Required files from the ZIP:
+| Asset | Duration | Dimensions | FPS | Size | Maximum keyframe interval |
+| --- | --- | --- | --- | --- | --- |
+| wedding-stage-scroll.mp4 | 64 s | 1280×720 | 20 | 19,815,519 bytes | 0.4 s |
+| wedding-stage-scroll-mobile.mp4 | 64 s | 768×432 | 15 | 4,314,497 bytes | 0.667 s |
 
-- `wedding-stage-scroll.mp4`: optimized desktop construction film, approximately 64 seconds.
-- `wedding-stage-scroll-mobile.mp4`: optimized mobile film of the identical edit/duration and camera perspective.
+Both are H.264/yuv420p, without audio streams, with the MP4 `moov` atom before media data for fast startup. `wedding-stage-poster.jpg` is the supplied matching thumbnail. Videos are retained as supplied, without re-encoding. The existing approved stage still remains the reduced-motion/error fallback.
 
-Check both with ffprobe: H.264, yuv420p, no audio needed, MP4 faststart, short GOP (ideally 0.25–0.5 seconds), matching frame rate and duration. Desktop up to 1920×1080; mobile up to 960×540 or 1280×720. Do not upscale. Verify HTTP byte-range support and accurate reverse seeking on the deployed host. Check actual worker motion and reference-stage matching visually before deployment.
+The component seeks the video while paused; it never uses autoplay as a clock. Canvas rendering is capped to the selected device budget. Reduced motion loads only the final poster and does not request either video. Missing/unsupported media shows the poster and a retry button. Desktop source is about 19 MB, so network speed affects first-load seeking.
 
-The component seeks the video while paused; it never uses autoplay as a clock. Canvas rendering is capped to the selected device budget. Reduced motion loads only the final poster and does not request either video. Missing/unsupported media shows the poster and a retry button.
+The supplied asset notes describe the source as seven Gemini-generated clips. The integration preserves their content; edits, generated-motion artifacts and the source watermark are not removed or represented as real filmed event work.
 
-Tests use clearly labeled generated codec fixtures in temporary storage, never production assets. Final source quality and physical iPhone/Android behavior cannot be certified without the supplied files and real devices.
+Tests include the actual desktop/mobile media, forward and reverse seeks, HTTP 206 range loading, and clearly labeled synthetic fixtures for error/runtime-mode cases. Chromium mobile emulation validates layout and media selection, not physical iPhone/Android device certification.
