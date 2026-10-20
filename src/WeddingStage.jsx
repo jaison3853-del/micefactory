@@ -7,7 +7,7 @@ import './WeddingStageScroll.css';
 gsap.registerPlugin(ScrollTrigger);
 const clamp = value => Math.max(0, Math.min(1, value));
 const phaseFor = p => p < .22 ? 0 : p < .50 ? 1 : p < .78 ? 2 : 3;
-const DESKTOP = import.meta.env.VITE_STAGE_DESKTOP_URL || '/media/wedding-stage-scroll.mp4';
+const DESKTOP = import.meta.env.VITE_STAGE_DESKTOP_URL || 'https://ayj0z9uanjiaychq.public.blob.vercel-storage.com/MICEFACTORY_Stage_Construction_4K_UHD.mp4';
 const MOBILE = import.meta.env.VITE_STAGE_MOBILE_URL || '/media/wedding-stage-scroll-mobile.mp4';
 
 /** Native paused-video seeking; scroll is the only playback clock. */
@@ -115,7 +115,7 @@ export default function WeddingStage({ reduced = false, onReady, onPhase }) {
       changeStatus('loading');
       vid.muted = true; vid.defaultMuted = true; vid.playsInline = true;
       vid.preload = 'auto'; vid.crossOrigin = 'anonymous'; vid.src = mobile ? MOBILE : DESKTOP; vid.load();
-      loadTimer = setTimeout(fail, 15000);
+      loadTimer = setTimeout(fail, 60000);
     }
     if (!reduced) {
       const state = { value: 0 };
