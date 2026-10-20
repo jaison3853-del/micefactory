@@ -516,13 +516,10 @@ export default function App() {
               <span className="mono">
                 {
                   [
-                    "001 / THE EMPTY VENUE",
-                    "002 / THE CREW ARRIVES",
-                    "003 / BUILT WITH PURPOSE",
-                    "004 / THE ART OF DECORATION",
-                    "005 / EVERY DETAIL MATTERS",
-                    "006 / READY FOR YOUR MOMENT",
-                    "007 / THE GRAND REVEAL",
+                    "001 / THE EMPTY CANVAS",
+                    "002 / COMING TO LIFE",
+                    "003 / THE FINAL REVEAL",
+                    "004 / LIGHTS. LIFE. CELEBRATION.",
                   ][phase]
                 }
               </span>
@@ -530,25 +527,19 @@ export default function App() {
                 {
                   [
                     "It starts with a vision.",
-                    "Great moments take a team.",
-                    "Built from the ground up.",
                     "Made with love.",
                     "Your moment. Made.",
-                    "The stage is yours.",
-                    "MICEFACTORY EVENTS",
+                    "Let the evening glow.",
                   ][phase]
                 }
               </h1>
               <p className="mono">
                 {
                   [
-                    "AN EMPTY VENUE. ENDLESS POSSIBILITIES.",
-                    "PEOPLE. CRAFT. A SHARED VISION.",
-                    "THE FOUNDATION OF SOMETHING EXTRAORDINARY.",
-                    "RED VELVET. FLOWERS. WARM GOLD.",
-                    "THOUGHTFULLY PLACED. BEAUTIFULLY FINISHED.",
-                    "THE WORK IS DONE. THE MEMORY BEGINS.",
-                    "FROM VISION TO REALITY",
+                    "AN EMPTY STAGE. ENDLESS POSSIBILITIES.",
+                    "FABRIC UNFOLDS. FLOWERS BLOOM. DETAILS FALL INTO PLACE.",
+                    "EVERY DETAIL IN PLACE. YOUR STAGE IS SET.",
+                    "THE LIGHTS COME ON. THE MEMORY BEGINS.",
                   ][phase]
                 }
               </p>
@@ -565,23 +556,23 @@ export default function App() {
               <button
                 className="scroll-cue mono"
                 onClick={() => {
-                  if (phase === 6 || reduced) navigate("#about");
+                  if (phase === 3 || reduced) navigate("#about");
                   else {
                     const journey = document.querySelector(".journey");
-                    const target = journey.offsetTop + (journey.offsetHeight - innerHeight) * [0.18, 0.34, 0.50, 0.66, 0.82, 0.98][phase];
+                    const target = journey.offsetTop + (journey.offsetHeight - innerHeight) * [0.48, 0.74, 0.97][phase];
                     if (lenis.current) lenis.current.scrollTo(target);
                     else window.scrollTo({ top: target, behavior: "smooth" });
                   }
                 }}
               >
                 <span className="scroll-line" />
-                {phase === 6
+                {phase === 3
                   ? "DISCOVER MICEFACTORY"
                   : "SCROLL TO CREATE"}{" "}
                 <span>↓</span>
               </button>
               <span className="world-index mono">
-                0{phase + 1} <span>/ 07</span>
+                0{phase + 1} <span>/ 04</span>
               </span>
             </div>
           </div>

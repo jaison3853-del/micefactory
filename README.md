@@ -2,7 +2,7 @@
 
 A responsive event studio website built with React, Vite, Three.js, GSAP and Lenis.
 
-The feature branch `feature/scroll-stage-construction` uses paused native MP4 seeking and canvas presentation for a 64-second construction film. Scroll position is the only playback clock; reversing scroll reverses the build. Desktop uses the configured public Vercel Blob 4K film; mobile uses the optimized local film in `public/media/`. Build-time `VITE_STAGE_DESKTOP_URL` and `VITE_STAGE_MOBILE_URL` can override these sources. The original supplied films and matching poster remain available; encoding details are documented in [public/media/README.md](public/media/README.md). A stable reference poster and retry control remain usable when media is unavailable. The cosmic outro, services, navigation and contact flow are preserved.
+The opening scene builds a wedding venue in four viewport-height chapters: the bare venue is dressed in crimson fabric, flowers and seating develop from the stage down the aisle, the complete stage is revealed, and a final live-lighting chapter adds moving spotlight beams, candle glow and floor reflections. Motion pauses offscreen and when the tab is hidden; reduced motion disables it. Aligned photographic layers use broad feathered reveals with scroll smoothing; individual flying cutouts are removed. Reverse scrolling undoes the construction. Mobile retains the landscape frame and reduced-motion mode shows the final stage immediately. The remaining site presents services and the company brochure.
 
 ## Run locally
 
@@ -57,17 +57,13 @@ npm run build
 npm run test:smoke
 ```
 
-The Playwright suite starts a production preview (or reuses one), checks native-video forward/reverse seeking, media errors and reduced-motion switching, every service dialog, keyboard/focus behavior, brochure availability, image loading, enquiry validation and URL encoding, mobile overflow, sound controls, reduced motion, and operation without WebGL. It stubs `window.open`, so tests never send messages or contact the business.
-
-The video-player tests require FFmpeg with libx264 and generate a clearly labeled 64-second codec fixture in temporary storage. This fixture is not construction footage and is never deployed. These tests verify playback mechanics, not artistic realism. Additional tests exercise the configured 4K desktop stream and actual local mobile film through forward and reverse seeks and HTTP range requests. The desktop integration test requires network access to the public Vercel Blob domain and intentionally fails if that stream cannot load; codec-fixture tests do not certify the remote asset. Physical iPhone/Android verification remains necessary with the real files.
+The Playwright suite starts a production preview (or reuses one), checks all four wedding-stage chapters and reverse scrolling, every service dialog, keyboard/focus behavior, brochure availability, image loading, enquiry validation and URL encoding, mobile overflow, sound controls, reduced motion, and operation without WebGL. It stubs `window.open`, so tests never send messages or contact the business.
 
 The cloud environment supplies Chromium at `/usr/bin/chromium`. Elsewhere, run `npx playwright install chromium`, or set `CHROMIUM_PATH` to an installed Chromium executable. Linux hosts may also need `npx playwright install --with-deps chromium`.
 
 ## Content and design
 
-- `src/WeddingStage.jsx`: paused-video seek queue, canvas presentation, progress and reduced-motion handling.
-- `src/WeddingStageScroll.css`: isolated construction-player styling.
-- `public/media/`: required desktop/mobile construction films.
+- `src/WeddingStage.jsx`: scroll-driven photographic layers, progress and reduced-motion handling.
 - `src/assets/`: landscape wedding final and matching empty-stage artwork.
 - `src/App.jsx`: sections, dialogs, navigation, audio and enquiry form.
 - `src/content.js`: services and confirmed contact configuration.
@@ -81,6 +77,4 @@ OS reduced-motion preferences show the finished stage immediately without an ext
 
 Each cloud task already has an isolated checkout. Reuse it; do not create a Git worktree unless explicitly requested.
 
-## Optional construction image sequence
-
-The current film remains configured. To use reviewed, fixed-camera construction footage as a progressively loaded WebP/AVIF sequence, follow [the source and delivery contract](docs/wedding-sequence.md). The seven-stage hero ends with MICEFACTORY EVENTS / FROM VISION TO REALITY. Sequence loading uses a bounded decoded-frame cache, two concurrent requests, reverse seeking and the existing photographic fallback. Test fixtures verify rendering mechanics, not the realism of the footage.
+The cosmic M-to-logo outro and its restart behavior are retained. The restored four-chapter stage does not load or play construction videos; its final lights continue animating while the stage remains visible.

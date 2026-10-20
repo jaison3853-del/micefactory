@@ -1,6 +1,24 @@
 import { test, expect } from "@playwright/test";
 import { phone, validatedPhone, whatsappUrl } from "../src/content.js";
 
+test("mobile four-stage lighting experience never loads video", async ({page}) => {
+  await page.setViewportSize({width:390,height:844});
+  const videoRequests = [];
+  page.on("request", request => {
+    if (/\.mp4(?:[?#]|$)|vercel-storage\.com/.test(request.url())) videoRequests.push(request.url());
+  });
+  await page.goto("/");
+  await expect(page.locator(".is-ready")).toBeAttached();
+  const travel = await page.locator(".journey").evaluate(el => el.offsetHeight-innerHeight);
+  for (const [p, phase] of [[.1,0],[.45,1],[.74,2],[.97,3],[.45,1],[0,0]]) {
+    await page.evaluate(y=>scrollTo(0,y),travel*p);
+    await expect(page.locator(".wedding-scene")).toHaveAttribute("data-phase",String(phase));
+  }
+  await expect(page.locator("video")).toHaveCount(0);
+  expect(videoRequests).toEqual([]);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
 test("only the confirmed complete phone number is used for enquiries", () => {
   expect(phone).toBe("+919567495707");
   expect(validatedPhone("+91 956795707")).toBeNull();
@@ -10,21 +28,46 @@ test("only the confirmed complete phone number is used for enquiries", () => {
   expect(link.searchParams.get("text")).toBe("A celebration & a new beginning");
 });
 
-test("missing construction footage keeps a stable poster and a recoverable state", async ({page}) => {
-  await page.route("**/*.mp4", route => route.fulfill({status:404, body:"Media not yet supplied"}));
+test("wedding stage builds through four continuous chapters and reverses without errors", async ({
+  page,
+}) => {
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await expect(page.locator(".is-ready")).toBeAttached();
-  await expect(page.locator(".stage-scroll-experience")).toHaveAttribute("data-state","unavailable");
-  await expect(page.locator(".stage-photo-finish")).toBeVisible();
-  await expect(page.locator(".stage-loading")).toHaveCount(0);
-  await expect(page.getByRole("button",{name:"RETRY EXPERIENCE"})).toBeVisible();
-  const travel = await page.locator(".journey").evaluate(el => el.offsetHeight-innerHeight);
-  expect(travel/900).toBeCloseTo(6,1);
-  await page.evaluate(y=>scrollTo(0,y),travel);
-  await expect(page.locator("h1")).toHaveText("MICEFACTORY EVENTS");
-  await expect(page.locator(".stage-photo-finish")).toHaveCSS("opacity","1");
-  await page.evaluate(()=>scrollTo(0,0));
+  await expect(page.locator(".stage-bare")).toBeVisible();
+  await expect.poll(() => page.locator(".stage-bare").evaluate(img => img.complete && img.naturalWidth > 0)).toBeTruthy();
+  await expect.poll(() => page.locator(".stage-finish").evaluate(img => img.complete && img.naturalWidth > 0)).toBeTruthy();
   await expect(page.locator("h1")).toHaveText("It starts with a vision.");
+  const travel = await page
+    .locator(".journey")
+    .evaluate((el) => el.offsetHeight - innerHeight);
+  expect(travel / 900).toBeCloseTo(3, 1);
+  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.45);
+  await expect(page.locator("h1")).toHaveText("Made with love.");
+  await expect(page.locator(".stage-fabric")).toBeVisible();
+  await expect.poll(() => page.locator(".stage-fabric").evaluate(img => img.complete && img.naturalWidth > 0)).toBeTruthy();
+  await expect(page.locator(".stage-piece")).toHaveCount(0);
+  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.74);
+  await expect(page.locator("h1")).toHaveText("Your moment. Made.");
+  await expect(page.locator(".wedding-scene")).not.toHaveClass(/lights-running/);
+  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.97);
+  await expect(page.locator("h1")).toHaveText("Let the evening glow.");
+  await expect.poll(() => page.locator(".wedding-scene").evaluate(el => parseFloat(el.style.getPropertyValue("--floral-edge")))) .toBe(128);
+  await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
+  await expect(page.locator(".wedding-scene")).toHaveClass(/lights-running/);
+  const beam = page.locator(".stage-spotlight").first();
+  const firstTransform = await beam.evaluate(el => getComputedStyle(el).transform);
+  await expect.poll(() => beam.evaluate(el => getComputedStyle(el).transform)).not.toBe(firstTransform);
+  await page.evaluate(() => window.scrollTo(0, document.querySelector("#about").offsetTop + 120));
+  await expect(page.locator(".wedding-scene")).not.toHaveClass(/lights-running/);
+  await page.evaluate((y) => window.scrollTo(0, y), travel * 0.55);
+  await expect(page.locator("h1")).toHaveText("Made with love.");
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(page.locator("h1")).toHaveText("It starts with a vision.");
+  await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(0);
+  await expect.poll(() => page.locator(".wedding-scene").evaluate(el => parseFloat(el.style.getPropertyValue("--fabric-edge")))).toBe(-28);
+  expect(errors).toEqual([]);
 });
 
 test("menu, five service details, native dialog focus and brochure work", async ({
@@ -124,11 +167,11 @@ test("mobile layouts, reduced motion, sound and navigation remain usable", async
       .locator(".journey")
       .evaluate((el) => el.offsetHeight <= innerHeight + 1),
   ).toBe(true);
-  await expect(page.locator("h1")).toHaveText("MICEFACTORY EVENTS");
-  await expect(page.locator(".stage-photo-finish")).toHaveCSS("opacity","1");
-  expect(await page.locator(".stage-scrub-source").evaluate(el=>el.paused && !el.getAttribute("src"))).toBe(true);
-  const frame = await page.locator(".stage-plane").boundingBox();
-  expect(frame.width / frame.height).toBeCloseTo(16/9,1);
+  await expect(page.locator("h1")).toHaveText("Let the evening glow.");
+  await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
+  await expect(page.locator(".live-stage-lights")).toBeHidden();
+  const frame = await page.locator(".stage-frame").boundingBox();
+  expect(frame.width / frame.height).toBeCloseTo(16 / 9, 1);
   for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 844 });
     expect(
