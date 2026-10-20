@@ -12,6 +12,7 @@ import Lenis from "lenis";
 import { services, phone, displayPhone, whatsappUrl } from "./content.js";
 
 const CosmicOutro = lazy(() => import("./CosmicOutro.jsx"));
+const EventExperiences = lazy(() => import("./EventExperiences.jsx"));
 const WeddingStage = lazy(() => import("./WeddingStage.jsx"));
 
 gsap.registerPlugin(ScrollTrigger);
@@ -77,6 +78,43 @@ function Photo({ image, alt, className = "", lazy = true }) {
 function SoundToggle() {
   const [enabled, setEnabled] = useState(false);
   const sound = useRef(null);
+  useEffect(() => {
+    let lastSound = 0;
+    const play = (event) => {
+      const audio = sound.current;
+      if (!audio?.enabled || document.hidden || audio.context.state !== "running") return;
+      if (event.type === "click" && (!event.target.closest("button,a,summary,input,select") || event.target.closest(".sound-toggle"))) return;
+      const now = audio.context.currentTime;
+      if (now - lastSound < .12) return;
+      lastSound = now;
+      const chapter = event.type === "mice:chapter";
+      const oscillator = audio.context.createOscillator();
+      const envelope = audio.context.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(chapter ? 330 : 740, now);
+      oscillator.frequency.exponentialRampToValueAtTime(chapter ? 495 : 520, now + .15);
+      envelope.gain.setValueAtTime(0, now);
+      envelope.gain.linearRampToValueAtTime(chapter ? .035 : .018, now + .025);
+      envelope.gain.exponentialRampToValueAtTime(.0001, now + (chapter ? .65 : .18));
+      oscillator.connect(envelope); envelope.connect(audio.effects);
+      oscillator.start(now); oscillator.stop(now + .7);
+      oscillator.onended = () => { oscillator.disconnect(); envelope.disconnect(); };
+    };
+    const visibility = () => {
+      const audio = sound.current;
+      if (!audio) return;
+      if (document.hidden) audio.context.suspend().catch(() => {});
+      else if (audio.enabled) audio.context.resume().catch(() => {});
+    };
+    document.addEventListener("click", play);
+    window.addEventListener("mice:chapter", play);
+    document.addEventListener("visibilitychange", visibility);
+    return () => {
+      document.removeEventListener("click", play);
+      window.removeEventListener("mice:chapter", play);
+      document.removeEventListener("visibilitychange", visibility);
+    };
+  }, []);
   useEffect(
     () => () => {
       sound.current?.context.close();
@@ -90,6 +128,9 @@ function SoundToggle() {
         if (!AudioContext) return;
         const context = new AudioContext();
         const gain = context.createGain();
+        const effects = context.createGain();
+        effects.gain.value = 0;
+        effects.connect(context.destination);
         gain.gain.value = 0;
         gain.connect(context.destination);
         [110, 164.81, 220.25].forEach((frequency) => {
@@ -99,11 +140,13 @@ function SoundToggle() {
           oscillator.connect(gain);
           oscillator.start();
         });
-        sound.current = { context, gain };
+        sound.current = { context, gain, effects, enabled:false };
       }
       const { context, gain } = sound.current;
       await context.resume();
       gain.gain.setTargetAtTime(enabled ? 0 : 0.018, context.currentTime, 0.4);
+      sound.current.enabled = !enabled;
+      sound.current.effects.gain.setTargetAtTime(enabled ? 0 : 1, context.currentTime, .03);
       setEnabled(!enabled);
     } catch {
       setEnabled(false);
@@ -164,11 +207,11 @@ function Dialog({ label, onClose, children, className = "" }) {
 }
 
 function Inquiry({ initial, onClose }) {
-  const [service, setService] = useState(initial || "Weddings & celebrations");
+  const [service, setService] = useState((typeof initial === "object" ? initial.service : initial) || "Weddings & celebrations");
   const [submitted, setSubmitted] = useState(false);
   const [url, setUrl] = useState("");
   const [brief, setBrief] = useState("");
-  const [formValues, setFormValues] = useState({});
+  const [formValues, setFormValues] = useState(typeof initial === "object" ? {details:initial.details} : {});
   const submit = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -810,6 +853,8 @@ export default function App() {
           </div>
         </section>
 
+        <Suspense fallback={null}><EventExperiences reduced={reduced} onPlan={openInquiry} /></Suspense>
+
         <section
           className="process section-light"
           id="approach"
@@ -951,6 +996,8 @@ export default function App() {
               ["03", "Experiences", "#experiences"],
               ["04", "Our approach", "#approach"],
               ["05", "Let’s talk", "#contact"],
+              ["06", "Inspiration", "#inspiration"],
+              ["07", "Build your brief", "#event-planner"],
             ].map(([n, label, target]) => (
               <a
                 key={n}

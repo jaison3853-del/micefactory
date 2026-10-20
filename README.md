@@ -78,3 +78,11 @@ OS reduced-motion preferences show the finished stage immediately without an ext
 Each cloud task already has an isolated checkout. Reuse it; do not create a Git worktree unless explicitly requested.
 
 The cosmic M-to-logo outro and its restart behavior are retained. The restored four-chapter stage does not load or play construction videos; its final lights continue animating while the stage remains visible.
+
+## Extended event experience
+
+`src/EventExperiences.jsx` adds two cinematic concept-image sections, scroll parallax and typography, a guest-count/style/support brief builder, and accessible native FAQ accordions. The brief builder prefills the existing enquiry dialog; visitors review their name and details before opening WhatsApp. It does not quote prices or create bookings. New navigation links reach inspiration and the planner.
+
+The existing SOUND toggle now also enables subtle interaction and section-entry tones. Audio remains off by default, respects mute and pauses when the tab is hidden. Reduced motion removes the new scroll transforms. Existing four-stage opening and cosmic outro are retained.
+
+New responsive WebP visuals are documented in `public/images/events/README.md`; these are native 1672px concept images, not native 4K or client-project photos. New browser tests cover image loading, planner-to-enquiry transfer, FAQ, SFX opt-in/mute, scroll effects and responsive/reduced-motion layouts.
