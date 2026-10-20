@@ -15,15 +15,15 @@ test.beforeAll(async () => {
 test.afterAll(async () => { if(folder) await rm(folder,{recursive:true,force:true}); });
 async function media(page) {
   const requests=[];
-  await page.route('**/media/*.mp4', async route => {
+  await page.route('**/*.mp4', async route => {
     requests.push(route.request().url());
     const range = route.request().headers()['range'];
     if (range) {
       const match = range.match(/bytes=(\d+)-(\d*)/);
       const start=Number(match?.[1]||0),end=Math.min(Number(match?.[2]||fixture.length-1),fixture.length-1);
-      return route.fulfill({status:206,contentType:'video/mp4',headers:{'accept-ranges':'bytes','content-range':`bytes ${start}-${end}/${fixture.length}`},body:fixture.subarray(start,end+1)});
+      return route.fulfill({status:206,contentType:'video/mp4',headers:{'access-control-allow-origin':'*','accept-ranges':'bytes','content-range':`bytes ${start}-${end}/${fixture.length}`},body:fixture.subarray(start,end+1)});
     }
-    return route.fulfill({contentType:'video/mp4',headers:{'accept-ranges':'bytes'},body:fixture});
+    return route.fulfill({contentType:'video/mp4',headers:{'access-control-allow-origin':'*','accept-ranges':'bytes'},body:fixture});
   });
   return requests;
 }
@@ -44,7 +44,8 @@ test('64-second video follows forward and reverse scroll without independent pla
   expect(await page.locator('.stage-scrub-source').evaluate(v=>v.currentTime)).toBe(time);
   expect(await page.locator('.stage-scrub-source').evaluate(v=>v.paused&&v.muted&&v.playsInline)).toBe(true);
   await seek(page,1);await seek(page,0);
-  expect(requests.every(url=>url.endsWith('wedding-stage-scroll.mp4'))).toBe(true);
+  expect(requests.length).toBeGreaterThan(0);
+  expect(requests.every(url=>url.endsWith('MICEFACTORY_Stage_Construction_4K_UHD.mp4'))).toBe(true);
   expect(errors).toEqual([]);
 });
 
@@ -77,21 +78,21 @@ test('reduced motion skips media and runtime motion toggle restores seeking',asy
 
 for (const mobile of [false, true]) {
   test(`supplied construction film: seven stages forward/reverse and HTTP ranges (${mobile ? 'mobile' : 'desktop'})`, async ({page}) => {
-    test.setTimeout(60000);
+    test.setTimeout(120000);
     if (mobile) await page.setViewportSize({width:390,height:844});
     const errors=[];page.on('pageerror', e=>errors.push(e.message));
     await page.goto('/');
-    await expect(page.locator('.stage-scroll-experience')).toHaveAttribute('data-state','ready');
+    await expect(page.locator('.stage-scroll-experience')).toHaveAttribute('data-state','ready', {timeout:60000});
     const source=page.locator('.stage-scrub-source');
     expect(await source.evaluate(v=>v.duration)).toBeCloseTo(64,1);
-    expect(await source.evaluate(v=>v.videoWidth)).toBe(mobile?768:1280);
+    expect(await source.evaluate(v=>v.videoWidth)).toBe(mobile?768:3840);
     const times = [0,.125,.25,.375,.5,.625,.75,.875,1,.75,.5,.25,0];
     for(const p of times) {
       await seek(page,p);
       await expect.poll(()=>page.locator('.stage-scroll-experience').evaluate((el,t)=>Math.abs(Number(el.dataset.renderedTime)-t), Math.min(p*64,64-1/30))).toBeLessThan(.15);
     }
     expect(await source.evaluate(v=>v.paused&&v.muted&&v.playsInline)).toBe(true);
-    const path=mobile?'/media/wedding-stage-scroll-mobile.mp4':'/media/wedding-stage-scroll.mp4';
+    const path=await source.evaluate(v=>v.currentSrc);
     const range=await page.request.get(path,{headers:{Range:'bytes=0-1023'}});
     expect(range.status()).toBe(206);
     expect((await range.body()).length).toBe(1024);

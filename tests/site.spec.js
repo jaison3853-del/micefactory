@@ -11,7 +11,7 @@ test("only the confirmed complete phone number is used for enquiries", () => {
 });
 
 test("missing construction footage keeps a stable poster and a recoverable state", async ({page}) => {
-  await page.route("**/media/*.mp4", route => route.fulfill({status:404, body:"Media not yet supplied"}));
+  await page.route("**/*.mp4", route => route.fulfill({status:404, body:"Media not yet supplied"}));
   await page.goto("/");
   await expect(page.locator(".is-ready")).toBeAttached();
   await expect(page.locator(".stage-scroll-experience")).toHaveAttribute("data-state","unavailable");
