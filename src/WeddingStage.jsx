@@ -7,8 +7,8 @@ import './WeddingStageScroll.css';
 gsap.registerPlugin(ScrollTrigger);
 const clamp = value => Math.max(0, Math.min(1, value));
 const phaseFor = p => p < .22 ? 0 : p < .50 ? 1 : p < .78 ? 2 : 3;
-const DESKTOP = '/media/wedding-stage-scroll.mp4';
-const MOBILE = '/media/wedding-stage-scroll-mobile.mp4';
+const DESKTOP = import.meta.env.VITE_STAGE_DESKTOP_URL || '/media/wedding-stage-scroll.mp4';
+const MOBILE = import.meta.env.VITE_STAGE_MOBILE_URL || '/media/wedding-stage-scroll-mobile.mp4';
 
 /** Native paused-video seeking; scroll is the only playback clock. */
 export default function WeddingStage({ reduced = false, onReady, onPhase }) {
@@ -38,7 +38,10 @@ export default function WeddingStage({ reduced = false, onReady, onPhase }) {
       ? Math.min(target * vid.duration, Math.max(0, vid.duration - 1 / 30)) : 0;
     const drawFrame = () => {
       if (!active() || !ctx || vid.readyState < 2 || !vid.videoWidth || vid.seeking) return;
-      const scale = Math.min(1, (mobile ? 960 : 1920) / vid.videoWidth, (mobile ? 720 : 1080) / vid.videoHeight);
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const maxWidth = mobile ? 960 : Math.min(3840, Math.max(1920, Math.round(window.innerWidth * dpr)));
+      const maxHeight = mobile ? 720 : Math.min(2160, Math.max(1080, Math.round(window.innerHeight * dpr)));
+      const scale = Math.min(1, maxWidth / vid.videoWidth, maxHeight / vid.videoHeight);
       const width = Math.max(1, Math.round(vid.videoWidth * scale));
       const height = Math.max(1, Math.round(vid.videoHeight * scale));
       if (cvs.width !== width || cvs.height !== height) { cvs.width = width; cvs.height = height; }
@@ -111,7 +114,7 @@ export default function WeddingStage({ reduced = false, onReady, onPhase }) {
     } else {
       changeStatus('loading');
       vid.muted = true; vid.defaultMuted = true; vid.playsInline = true;
-      vid.preload = 'auto'; vid.src = mobile ? MOBILE : DESKTOP; vid.load();
+      vid.preload = 'auto'; vid.crossOrigin = 'anonymous'; vid.src = mobile ? MOBILE : DESKTOP; vid.load();
       loadTimer = setTimeout(fail, 15000);
     }
     if (!reduced) {
