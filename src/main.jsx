@@ -4,6 +4,7 @@ import "@fontsource-variable/manrope";
 import "@fontsource/ibm-plex-mono/latin-400.css";
 import "lenis/dist/lenis.css";
 import "./styles.css";
+import "./mobile.css";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(

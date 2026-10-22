@@ -1,0 +1,126 @@
+/* Readable mobile composition. ID scope keeps lazy section styles from shrinking type. */
+@media(max-width:759px) {
+ :root {--gutter:20px;}
+ html {-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:90px;}
+ #root .mono {font-size:12px;line-height:1.65;letter-spacing:.035em;}
+ #root p {line-height:1.7;}
+ #root .header {padding:12px 20px;min-height:76px;gap:10px;background:#151b16f5;}
+ #root .header .brand > span:first-child {font-size:23px;}
+ #root .header .brand-description {font-size:9px;letter-spacing:-.025em;max-width:210px;white-space:normal;line-height:1.5;}
+ #root .header-actions {gap:8px;}
+ #root .header-contact {display:none;}
+ #root .menu-button {width:44px;height:44px;padding:10px;flex-shrink:0;}
+ #root .immersive-hero {height:100svh;min-height:560px;}
+ #root .stage-frame {top:100px;aspect-ratio:16/9;}
+ #root .world-copyright,#root .world-coordinates > span {display:none;}
+ #root .world-vignette {background:linear-gradient(0deg,#150b0a 0%,transparent 52%);}
+ #root .world-heading {left:20px;right:20px;top:calc(100px + 56.25vw + 20px);bottom:auto;animation:none;text-shadow:none;}
+ #root .world-heading > span {font-size:11px;line-height:1.4;margin-bottom:8px;color:#ffdda2;opacity:1;}
+ #root .world-heading h1 {font-size:clamp(30px,8.1vw,40px);line-height:1.12;letter-spacing:-.045em;max-width:100%;}
+ #root .world-heading > p {font-size:12px;line-height:1.6;margin-top:10px;opacity:1;color:#eee5d7;letter-spacing:0;}
+ #root .world-coordinates {bottom:78px;left:20px;right:20px;justify-content:flex-start;}
+ #root .world-coordinates button {font-size:12px;min-height:44px;margin:0;line-height:1.5;}
+ #root .immersive-hero .hero-bottom {left:20px;right:20px;bottom:max(10px,env(safe-area-inset-bottom));padding-top:8px;display:flex;justify-content:space-between;gap:12px;}
+ #root .immersive-hero .sound-toggle,#root .immersive-hero .scroll-cue {font-size:11px;min-height:44px;line-height:1.4;gap:8px;}
+ #root .world-index {display:none;}
+ #root .scroll-line {display:none;}
+ #root .section-top {gap:12px;flex-wrap:wrap;line-height:1.6;}
+ #root .section-top > span:last-child {display:none;}
+ #root .story-copy p,#root .section-heading p,#root .experience-heading p,#root .process-layout p,#root .contact-bottom p {font-size:16px;color:inherit;opacity:.9;}
+ #root .story-heading {font-size:clamp(36px,9.5vw,50px);line-height:1.16;letter-spacing:-.05em;}
+ #root .principles p {font-size:20px;line-height:1.4;}
+ #root .section-heading h2,#root .experience-heading h2,#root .process-layout h2 {font-size:clamp(34px,9vw,48px);line-height:1.15;}
+ #root .service-title {font-size:clamp(22px,6.3vw,30px);line-height:1.3;}
+ #root .service-row {min-height:90px;gap:12px;}
+ #root .service-num {font-size:11px;}
+ #root .experience-card {min-height:350px;}
+ #root .card-heading {font-size:30px;line-height:1.2;left:20px;right:20px;bottom:30px;}
+ #root .card-category {left:20px;right:20px;top:25px;font-size:11px;line-height:1.6;}
+ #root .photo-shade {background:linear-gradient(0deg,#050906eb,transparent 80%);}
+ #root .event-edit-intro {padding:72px 20px 54px;}
+ #root .event-edit-intro h2 {font-size:clamp(34px,9vw,44px);line-height:1.2;letter-spacing:-.04em;}
+ #root .event-edit-intro > p {font-size:16px;color:#d0d7c9;}
+ #root .event-concept-note {font-size:11px;color:#bdc9b2;display:block;}
+ #root .event-edit-intro em .motion-word {color:#d6e7c3;background:none;-webkit-text-stroke:0;}
+ #root .motion-overture {height:100svh;min-height:560px;}
+ #root .overture-eyebrow,#root .overture-caption {font-size:11px;line-height:1.7;letter-spacing:.04em;max-width:100%;}
+ #root .overture-type {font-size:14vw;line-height:1.15;}
+ #root .overture-card {opacity:.7;}
+ #root .event-world {height:auto;min-height:720px;padding:330px 20px 44px;display:block;}
+ #root .event-world-image {inset:0 0 auto;height:390px;}
+ #root .event-world-shade {background:linear-gradient(0deg,#0b100c 35%,#0b100ce8 48%,transparent 85%);}
+ #root .event-world-copy {position:relative;opacity:1;transform:none;}
+ #root .event-world h2 {font-size:clamp(36px,9.5vw,46px);line-height:1.17;letter-spacing:-.04em;margin:20px 0;}
+ #root .event-world-copy > .mono {font-size:12px;color:#f2dfb9;}
+ #root .event-world p {font-size:16px;color:#e1e5da;line-height:1.75;}
+ #root .event-world-caption {display:none;}
+ #root .event-outline {min-height:52px;font-size:12px;justify-content:space-between;gap:20px;padding:14px 20px;width:100%;}
+ #root .event-atmosphere,#root .event-pointer-light {display:none;}
+ #root .event-light-bridge {height:240px;min-height:240px;}
+ #root .event-light-bridge span {font-size:12px;letter-spacing:.04em;line-height:1.8;}
+ #root .event-planner,#root .event-faq {padding:72px 20px;gap:36px;}
+ #root .event-planner-heading p,#root .event-faq details p {font-size:16px;line-height:1.8;}
+ #root .event-planner-controls {gap:32px;min-width:0;}
+ #root .planner-select select {font-size:16px;min-height:52px;}
+ #root .planner-guests input {min-height:44px;margin:8px 0;}
+ #root .planner-guests > div {font-size:10px!important;gap:16px;}
+ #root .planner-guests label {font-size:12px;flex-wrap:wrap;}
+ #root .planner-chips label {font-size:14px;min-height:48px;line-height:1.4;}
+ #root .planner-checks {grid-template-columns:1fr;gap:4px;font-size:16px;}
+ #root .planner-checks label {min-height:44px;}
+ #root .planner-checks input {width:22px;height:22px;}
+ #root .planner-summary {padding:20px;}
+ #root .planner-summary p {font-size:16px;}
+ #root .planner-submit {min-height:56px;font-size:14px;}
+ #root .planner-note {font-size:13px;line-height:1.7;margin-top:-12px;}
+ #root .event-faq summary {font-size:17px;line-height:1.5;min-height:44px;}
+ #root .event-faq details p {padding-right:0;color:#cdd6c4;}
+ #root .contact-title h2 {font-size:clamp(45px,13vw,72px);}
+ #root .footer {gap:28px;}
+ #root .footer-right {flex-wrap:wrap;gap:12px;}
+ #root .footer-right button {min-height:44px;}
+ #root .dialog {max-height:calc(100dvh - 16px);max-width:calc(100% - 16px);overflow:auto;}
+ #root .dialog-inner {padding:72px 20px 28px;}
+ #root .dialog .eyebrow {font-size:12px;line-height:1.65;}
+ #root .dialog h2 {font-size:34px;line-height:1.18;letter-spacing:-.04em;}
+ #root .dialog label {font-size:15px;line-height:1.5;}
+ #root .dialog :is(input,select,textarea) {font-size:16px;min-height:48px;}
+ #root .dialog p,#root .dialog li {font-size:15px;line-height:1.7;}
+ #root .dialog .pill,#root .close-dialog {min-height:44px;font-size:12px;}
+ #root .menu-dialog {width:100%;max-width:100%;height:100dvh;max-height:100dvh;}
+ #root .menu-dialog .dialog-inner {height:auto;min-height:100%;padding:76px 24px 30px;}
+ #root .menu-dialog nav {margin:24px 0;flex:none;gap:0;}
+ #root .menu-dialog nav > a {font-size:25px;padding:14px 0;line-height:1.3;min-height:56px;gap:14px;}
+ #root .menu-dialog nav > a > .mono {font-size:12px;}
+ #root .menu-bottom {font-size:12px;line-height:1.7;flex-wrap:wrap;}
+ #root .cosmic-caption {font-size:12px;letter-spacing:.08em;padding:0 24px;line-height:1.7;}
+ #root .cosmic-wordmark p {font-size:11px;text-align:center;line-height:1.9;max-width:285px;}
+ #root .cosmic-wordmark b {display:block;border:0;margin:4px 0 0;padding:0;font-size:14px;}
+ #root .cosmic-restart {font-size:12px;min-height:48px;line-height:1.7;}
+}
+@media(max-width:759px) and (max-height:650px) {
+ #root .world-heading {top:calc(92px + 56.25vw + 12px);}
+ #root .stage-frame {top:92px;}
+ #root .world-heading h1 {font-size:29px;}
+ #root .world-coordinates {bottom:64px;}
+ #root .world-heading > p {font-size:11px;line-height:1.4;margin-top:8px;}
+}
+@media(max-width:1023px) and (orientation:landscape) and (max-height:500px) {
+ #root .immersive-hero {height:100svh;min-height:360px;}
+ #root .header {padding:6px 20px;min-height:64px;}
+ #root .stage-frame {top:82px;left:20px;width:46%;aspect-ratio:16/9;}
+ #root .world-heading {top:88px;left:52%;right:20px;bottom:auto;animation:none;}
+ #root .world-heading h1 {font-size:28px;line-height:1.15;}
+ #root .world-heading > span,#root .world-heading > p {font-size:12px;line-height:1.5;opacity:1;}
+ #root .world-heading > span {margin-bottom:8px;}
+ #root .world-heading > p {margin-top:10px;}
+ #root .world-copyright,#root .world-coordinates,#root .world-index {display:none;}
+ #root .immersive-hero .hero-bottom {bottom:8px;padding-top:4px;}
+ #root .immersive-hero .sound-toggle,#root .immersive-hero .scroll-cue {min-height:44px;font-size:12px;}
+}
+@media(max-width:1023px) and (orientation:landscape) and (max-height:500px) {
+ #root .mono {font-size:12px;line-height:1.5;}
+ #root .menu-button {min-width:44px;min-height:44px;}
+ #root .header .brand-description {font-size:9px;}
+ #root .dialog :is(input,select,textarea) {font-size:16px;min-height:44px;}
+}

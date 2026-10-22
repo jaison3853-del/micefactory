@@ -16,6 +16,8 @@ const atmospheres=['Timeless elegance','Bold & theatrical','Natural & intimate']
 
 export default function EventExperiences({reduced, onPlan}) {
   const root=useRef(null);
+  const [mobile,setMobile]=useState(()=>matchMedia('(max-width:759px)').matches);
+  useEffect(()=>{const query=matchMedia('(max-width:759px)');const update=()=>setMobile(query.matches);query.addEventListener('change',update);return()=>query.removeEventListener('change',update);},[]);
   const [service,setService]=useState(services[0].title);
   const [guests,setGuests]=useState(150);
   const [mood,setMood]=useState(atmospheres[0]);
@@ -56,6 +58,7 @@ export default function EventExperiences({reduced, onPlan}) {
           cleanups.push(()=>{card.removeEventListener('pointermove',move);card.removeEventListener('pointerleave',leave);});
         });
       }
+      if(!mobile) {
       const overture=root.current.querySelector('.motion-overture');
       const journey=gsap.timeline({scrollTrigger:{trigger:overture,start:'top top',end:'bottom bottom',scrub:.7}});
       journey.fromTo('.overture-card-one',{xPercent:-85,yPercent:18,rotation:-18,scale:.8},{xPercent:0,yPercent:0,rotation:-7,scale:1,duration:1},0)
@@ -68,23 +71,26 @@ export default function EventExperiences({reduced, onPlan}) {
       gsap.fromTo('.event-edit-intro .motion-word',{yPercent:110,rotation:5},{yPercent:0,rotation:0,stagger:.07,duration:.9,ease:'power3.out',scrollTrigger:{trigger:'.event-edit-intro',start:'top 75%',toggleActions:'play none none reverse'}});
       gsap.fromTo('.event-edit-intro',{'--type-fill':'0%'},{'--type-fill':'100%',ease:'none',scrollTrigger:{trigger:'.event-edit-intro',start:'top 80%',end:'top 20%',scrub:.5}});
       gsap.fromTo('.event-light-bridge',{'--bridge':'0%'},{'--bridge':'100%',ease:'none',scrollTrigger:{trigger:'.event-light-bridge',start:'top bottom',end:'bottom top',scrub:.5}});
+      }
       gsap.utils.toArray('.event-world').forEach(panel=>{
+        if(!mobile) {
         const skew=gsap.quickTo(panel.querySelector('img'),'skewY',{duration:.4,ease:'power3.out'});
         const settle=gsap.delayedCall(.15,()=>skew(0)).pause();
         ScrollTrigger.create({trigger:panel,start:'top bottom',end:'bottom top',onUpdate:self=>{if(self.isActive){skew(gsap.utils.clamp(-1.6,1.6,self.getVelocity()/1400));settle.restart(true);}}});
         gsap.fromTo(panel,{clipPath:'inset(8% 6% round 48px)'},{clipPath:'inset(0% 0% round 0px)',ease:'none',scrollTrigger:{trigger:panel,start:'top 95%',end:'top 10%',scrub:.45}});
         ScrollTrigger.create({trigger:panel,start:'top bottom',end:'bottom top',onToggle:self=>panel.classList.toggle('world-active',self.isActive)});
         gsap.fromTo(panel.querySelectorAll('.motion-word'),{yPercent:115,rotation:4},{yPercent:0,rotation:0,stagger:.065,duration:.85,ease:'power3.out',scrollTrigger:{trigger:panel,start:'top 65%',toggleActions:'play none none reverse'}});
-        gsap.fromTo(panel.querySelector('.event-world-image'),{yPercent:-8,scale:1.23},{yPercent:8,scale:1.04,ease:'none',scrollTrigger:{trigger:panel,start:'top bottom',end:'bottom top',scrub:.6}});
-        gsap.fromTo(panel.querySelector('.event-world-copy'),{y:65,opacity:0},{y:0,opacity:1,duration:1,scrollTrigger:{trigger:panel,start:'top 65%',toggleActions:'play none none reverse',onEnter:()=>window.dispatchEvent(new Event('mice:chapter'))}});
+        }
+        gsap.fromTo(panel.querySelector('.event-world-image'),{yPercent:mobile?-2:-8,scale:mobile?1.06:1.23},{yPercent:mobile?2:8,scale:1.04,ease:'none',scrollTrigger:{trigger:panel,start:'top bottom',end:'bottom top',scrub:.6}});
+        if(!mobile) gsap.fromTo(panel.querySelector('.event-world-copy'),{y:65,opacity:0},{y:0,opacity:1,duration:1,scrollTrigger:{trigger:panel,start:'top 65%',toggleActions:'play none none reverse',onEnter:()=>window.dispatchEvent(new Event('mice:chapter'))}});
       });
       gsap.to('.planner-orbit',{rotation:270,ease:'none',scrollTrigger:{trigger:'.event-planner',start:'top bottom',end:'bottom top',scrub:1}});
       gsap.to('.event-marquee-track',{xPercent:-20,ease:'none',scrollTrigger:{trigger:'.event-marquee',start:'top bottom',end:'bottom top',scrub:1}});
-      gsap.fromTo('.event-planner-heading',{y:40,opacity:0},{y:0,opacity:1,duration:.8,scrollTrigger:{trigger:'.event-planner',start:'top 75%'}});
+      if(!mobile) gsap.fromTo('.event-planner-heading',{y:40,opacity:0},{y:0,opacity:1,duration:.8,scrollTrigger:{trigger:'.event-planner',start:'top 75%'}});
     },root);
     const refresh = requestAnimationFrame(()=>ScrollTrigger.refresh());
     return ()=>{ cancelAnimationFrame(refresh); cleanups.forEach(cleanup=>cleanup()); context.revert(); root.current?.querySelectorAll('.world-active').forEach(el=>el.classList.remove('world-active')); };
-  },[reduced]);
+  },[reduced,mobile]);
   const toggleDetail=value=>setDetails(current=>current.includes(value)?current.filter(item=>item!==value):[...current,value]);
   const brief=`Guest count: ${guests}${guests===1000?'+':''}.\nAtmosphere: ${mood}.\nInterested in: ${details.length?details.join(', '):'Full planning consultation'}.`;
   return <div className="event-extension" ref={root}>
