@@ -100,3 +100,10 @@
 @media(prefers-reduced-motion:reduce) {
  .motion-overture { height:100svh; }.event-atmosphere,.event-pointer-light { display:none; }.event-outline span,.planner-submit span { transition:none; }
 }
+.event-edit-intro em .motion-word {color:transparent;-webkit-text-stroke:.6px #c7d5b3;background:linear-gradient(90deg,#c7d5b3 var(--type-fill,100%),transparent var(--type-fill,100%));background-clip:text;-webkit-background-clip:text;}
+.event-light-bridge {height:48svh;min-height:260px;background:#0b100c;position:relative;isolation:isolate;overflow:hidden;display:grid;place-items:center;}
+.bridge-light {position:absolute;inset:-50%;background:conic-gradient(from 90deg at var(--bridge,0%) 50%,transparent,#c09a4c44,transparent,#65829e55,transparent);transform:rotate(-15deg);filter:blur(35px);z-index:-1;}
+.event-light-bridge::after {content:'';position:absolute;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,#e1cb92,#9bbcd6,transparent);top:65%;transform:scaleX(.8);}
+.event-light-bridge span {font-size:10px;letter-spacing:.2em;text-align:center;padding:0 24px;color:#d9dac9;}
+.reduced-motion .event-light-bridge {height:260px;}
+@media(max-width:759px){.event-light-bridge span{font-size:8px;line-height:1.8;}}

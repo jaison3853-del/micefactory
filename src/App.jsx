@@ -11,6 +11,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import { services, phone, displayPhone, whatsappUrl } from "./content.js";
 
+const AdvancedCursor = lazy(() => import("./AdvancedCursor.jsx"));
 const CosmicOutro = lazy(() => import("./CosmicOutro.jsx"));
 const EventExperiences = lazy(() => import("./EventExperiences.jsx"));
 const WeddingStage = lazy(() => import("./WeddingStage.jsx"));
@@ -978,6 +979,7 @@ export default function App() {
         </div>
       </footer>
 
+      <Suspense fallback={null}><AdvancedCursor reduced={reduced} /></Suspense>
       <Suspense fallback={null}><CosmicOutro reduced={reduced} onRestart={restartExperience} /></Suspense>
 
       {menu && (

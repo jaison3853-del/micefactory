@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { services } from './content.js';
@@ -66,7 +66,12 @@ export default function EventExperiences({reduced, onPlan}) {
         .fromTo('.overture-caption',{y:25,opacity:0},{y:0,opacity:1,duration:.5},1)
         .fromTo('.overture-progress',{scaleX:0},{scaleX:1,ease:'none',duration:1.7},0);
       gsap.fromTo('.event-edit-intro .motion-word',{yPercent:110,rotation:5},{yPercent:0,rotation:0,stagger:.07,duration:.9,ease:'power3.out',scrollTrigger:{trigger:'.event-edit-intro',start:'top 75%',toggleActions:'play none none reverse'}});
+      gsap.fromTo('.event-edit-intro',{'--type-fill':'0%'},{'--type-fill':'100%',ease:'none',scrollTrigger:{trigger:'.event-edit-intro',start:'top 80%',end:'top 20%',scrub:.5}});
+      gsap.fromTo('.event-light-bridge',{'--bridge':'0%'},{'--bridge':'100%',ease:'none',scrollTrigger:{trigger:'.event-light-bridge',start:'top bottom',end:'bottom top',scrub:.5}});
       gsap.utils.toArray('.event-world').forEach(panel=>{
+        const skew=gsap.quickTo(panel.querySelector('img'),'skewY',{duration:.4,ease:'power3.out'});
+        const settle=gsap.delayedCall(.15,()=>skew(0)).pause();
+        ScrollTrigger.create({trigger:panel,start:'top bottom',end:'bottom top',onUpdate:self=>{if(self.isActive){skew(gsap.utils.clamp(-1.6,1.6,self.getVelocity()/1400));settle.restart(true);}}});
         gsap.fromTo(panel,{clipPath:'inset(8% 6% round 48px)'},{clipPath:'inset(0% 0% round 0px)',ease:'none',scrollTrigger:{trigger:panel,start:'top 95%',end:'top 10%',scrub:.45}});
         ScrollTrigger.create({trigger:panel,start:'top bottom',end:'bottom top',onToggle:self=>panel.classList.toggle('world-active',self.isActive)});
         gsap.fromTo(panel.querySelectorAll('.motion-word'),{yPercent:115,rotation:4},{yPercent:0,rotation:0,stagger:.065,duration:.85,ease:'power3.out',scrollTrigger:{trigger:panel,start:'top 65%',toggleActions:'play none none reverse'}});
@@ -100,12 +105,12 @@ export default function EventExperiences({reduced, onPlan}) {
         <div className="overture-progress" aria-hidden="true"/>
       </div>
     </section>
-    {worlds.map(world=><section className={`event-world event-world-${world.id}`} key={world.id} aria-labelledby={`${world.id}-title`}>
+    {worlds.map(world=><Fragment key={world.id}><section className={`event-world event-world-${world.id}`} key={world.id} aria-labelledby={`${world.id}-title`}>
       <picture className="event-world-image"><source type="image/webp" srcSet={`/images/events/${world.image}-800.webp 800w, /images/events/${world.image}-1600.webp 1600w, /images/events/${world.image}-full.webp 1672w`} sizes="100vw"/><img src={`/images/events/${world.image}-1600.webp`} alt={world.alt} width="1672" height={world.id === 'garden' ? 941 : 940} loading="lazy" decoding="async"/></picture>
       <div className="event-atmosphere" aria-hidden="true"><i className="event-light-sweep"/>{Array.from({length:8},(_,i)=><i className="event-spark" key={i} style={{left:`${9+i*12}%`,top:`${15+(i*19)%65}%`,'--spark-delay':`${-i*1.3}s`}}/>)}</div><div className="event-pointer-light" aria-hidden="true"/><div className="event-world-shade"/>
       <div className="event-world-copy"><span className="mono">{world.tag}</span><h2 id={`${world.id}-title`}><MotionWords text={world.title}/></h2><p>{world.text}</p><button className="event-outline mono" onClick={()=>onPlan(world.service)}>CREATE YOUR VERSION <span>↗</span></button></div>
       <span className="event-world-caption mono">MICEFACTORY / AN EXPRESSION OF POSSIBILITY</span>
-    </section>)}
+    </section>{world.id==='garden' && <div className="event-light-bridge" aria-hidden="true"><div className="bridge-light"/><span className="mono">A DIFFERENT WORLD. THE SAME ATTENTION TO DETAIL.</span></div>}</Fragment>)}
     <div className="event-marquee" aria-hidden="true"><div className="event-marquee-track">PEOPLE. <em>PLACES.</em> POSSIBILITIES. <em>PEOPLE.</em> PLACES. POSSIBILITIES.</div></div>
     <section className="event-planner" id="event-planner" aria-labelledby="planner-title">
       <div className="event-planner-heading"><span className="mono">YOUR EVENT, YOUR WAY / A STARTING POINT</span><h2 id="planner-title">Let’s shape<br/><em>your next moment.</em></h2><p>Build a little brief. We’ll bring the ideas, the experience and the attention to detail.</p><span className="planner-orbit" aria-hidden="true">✳</span></div>

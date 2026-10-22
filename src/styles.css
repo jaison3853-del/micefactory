@@ -2566,3 +2566,10 @@ button {
 .cosmic-restart span { display:block; margin-top:14px; font-size:22px; }
 .cosmic-reduced { height:100svh; }
 @media(max-width:759px) { .cosmic-caption { font-size:7px; } .cosmic-orbit { width:130vw; height:48vw; left:-15%; } .cosmic-wordmark p { letter-spacing:.01em; margin-top:14px; } .cosmic-restart { font-size:7px; } .film-play { font-size:7px; padding:8px 12px; } }
+
+/* Light resolves into the existing cosmic signature as the page ends. */
+.cosmic-entry-glow {position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 0%,#c2a66a55,transparent 65%);opacity:calc(1 - var(--arrival,0));}
+.cosmic-seed-field {position:absolute;width:clamp(180px,31vw,450px);aspect-ratio:1;pointer-events:none;opacity:calc(1 - var(--assemble,0));}
+.cosmic-seed-field i {position:absolute;width:4px;height:4px;border-radius:50%;background:#fff4d2;box-shadow:0 0 14px 3px #e3ca8a88;transform:translate(calc(var(--seed-x) * (1 - var(--assemble,0))),calc(var(--seed-y) * (1 - var(--assemble,0))));}
+.cosmic-reduced .cosmic-seed-field,.cosmic-reduced .cosmic-entry-glow {display:none;}
+@media(prefers-reduced-motion:reduce){.cosmic-seed-field,.cosmic-entry-glow{display:none;}}

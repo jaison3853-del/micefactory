@@ -1,0 +1,18 @@
+.advanced-cursor {pointer-events:none;position:fixed;inset:0;z-index:9999;opacity:0;transition:opacity .18s;contain:layout style;}
+.advanced-cursor.cursor-visible {opacity:1;}
+.cursor-dot,.cursor-pulse {position:absolute;left:var(--cursor-x,0);top:var(--cursor-y,0);border-radius:50%;transform:translate(-50%,-50%);}
+.cursor-dot {width:5px;height:5px;background:#f8eed7;box-shadow:0 0 0 1px #171d16;}
+.cursor-ring {position:absolute;left:var(--ring-x,0);top:var(--ring-y,0);width:38px;height:38px;border:1px solid #e6d9b4bb;border-radius:50%;transform:translate(-50%,-50%);display:grid;place-items:center;background:#121b1320;box-shadow:0 0 0 1px #15201630;transition:width .25s,height .25s,background .25s;}
+.cursor-ring i {position:absolute;inset:-5px;border:1px solid transparent;border-top-color:#d5e5bbaa;border-bottom-color:#d5e5bbaa;border-radius:50%;transform:rotate(-35deg);}
+.cursor-label {font:8px var(--mono);letter-spacing:.1em;color:#172115;}
+.advanced-cursor[data-mode=explore] .cursor-ring {width:82px;height:82px;background:#e4edcfed;border-color:#e4edcf;}
+.advanced-cursor[data-mode=action] .cursor-ring {width:48px;height:48px;background:#e4edcfed;}
+.advanced-cursor[data-mode=action] .cursor-label {font-size:23px;}
+.advanced-cursor:not([data-mode=default]) .cursor-dot {opacity:0;}
+.cursor-pulse {width:50px;height:50px;border:1px solid #e1efbc;opacity:0;}
+@media(hover:hover) and (pointer:fine) {html.custom-cursor-active,html.custom-cursor-active :is(a,button,summary,label){cursor:none;}html.custom-cursor-active :is(input,textarea,select),html.custom-cursor-active dialog,html.custom-cursor-active dialog * {cursor:auto;}}
+html:has(dialog[open]) .advanced-cursor {display:none;}
+@media(prefers-reduced-motion:reduce),(pointer:coarse) {.advanced-cursor {display:none;}}
+.event-outline:active,.planner-submit:active,.pill:active {scale:.97;filter:brightness(1.1);}
+.service-row::after {content:'';position:absolute;left:0;bottom:0;width:100%;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .6s;pointer-events:none;}
+.service-row:hover::after,.service-row:focus-visible::after {transform:scaleX(1);}
