@@ -195,7 +195,7 @@ test("mobile layouts, reduced motion, sound and navigation remain usable", async
   ).toBeVisible();
   expect(
     await page
-      .locator("dialog")
+      .locator("dialog[open]")
       .evaluate((el) => el.scrollWidth <= el.clientWidth),
   ).toBe(true);
 });

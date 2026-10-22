@@ -1,0 +1,54 @@
+.stage-comparison {padding:110px max(6vw,24px);background:#101210;color:#f2eee4;}
+.compare-heading {display:flex;align-items:flex-end;justify-content:space-between;gap:36px;margin-bottom:40px;}
+.compare-kicker {font:12px "IBM Plex Mono",monospace;letter-spacing:.14em;color:#cbb481;margin:0 0 24px;}
+.compare-heading h2 {font:500 clamp(36px,5.8vw,84px)/1.08 "Manrope Variable",sans-serif;letter-spacing:-.055em;margin:0;}
+.compare-heading h2 em {font-style:normal;color:#cdb88e;}
+.compare-heading > p {max-width:300px;font-size:16px;line-height:1.75;color:#b8bdb2;}
+.compare-frame {border:1px solid #cdb88e40;padding:8px;border-radius:8px;background:#181b17;}
+.compare-scene {position:relative;aspect-ratio:1600/975;overflow:hidden;background:#20241e;isolation:isolate;}
+.compare-scene > img {display:block;width:100%;height:100%;object-fit:cover;}
+.compare-scene .compare-after {position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--split)) 0 0);}
+.compare-tags {position:absolute;inset:20px 20px auto;display:flex;justify-content:space-between;flex-direction:row-reverse;pointer-events:none;}
+.compare-tags span {font:11px "IBM Plex Mono",monospace;letter-spacing:.1em;padding:10px 14px;border:1px solid #ffffff30;border-radius:30px;background:#090e0cd9;color:#fff;}
+.compare-divider {position:absolute;inset:0 auto 0 var(--split);width:2px;background:#ffe3a5;transform:translateX(-50%);box-shadow:0 0 20px #ffdc8c70;pointer-events:none;}
+.compare-divider > span {position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;display:flex;justify-content:center;align-items:center;gap:10px;border:1px solid #ffe3a5;border-radius:50%;background:#151c16db;color:#ffe3a5;font-size:27px;box-shadow:0 4px 28px #0007;}
+.compare-divider i {height:16px;width:1px;background:#ffe3a560;}
+.compare-scene .compare-range {position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;opacity:0;cursor:ew-resize;touch-action:pan-y;-webkit-appearance:none;appearance:none;background:transparent;}
+.compare-range::-webkit-slider-thumb {-webkit-appearance:none;width:1px;height:64px;}
+.compare-range::-moz-range-thumb {width:1px;height:64px;border:0;background:transparent;}
+.compare-scene:has(.compare-range:focus-visible) {outline:3px solid #ffe3a5;outline-offset:3px;}
+.compare-scene:has(.compare-range:focus-visible) .compare-divider > span {outline:3px solid white;outline-offset:5px;}
+.compare-controls {display:flex;justify-content:space-between;gap:16px;align-items:center;padding:18px 12px 10px;}
+.compare-presets {display:flex;gap:4px;background:#0b0f0c;padding:4px;border-radius:30px;}
+.stage-comparison .compare-presets button {min-height:44px;padding:8px 22px;border-radius:24px;color:#c8cabc;font-size:13px;}
+.stage-comparison .compare-presets button[aria-pressed=true] {background:#e6d3ad;color:#192019;}
+.compare-hint,.compare-foot {font:11px "IBM Plex Mono",monospace;letter-spacing:.06em;color:#b3b9a9;}
+.compare-hint span {margin-left:14px;font-size:20px;color:#ddc695;}
+.compare-foot {display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:18px;}
+.stage-comparison .compare-foot button,.compare-modal-head button {min-height:44px;padding:10px 0;color:#e6d3ad;font:12px "IBM Plex Mono",monospace;}
+.compare-foot button span {margin-left:12px;}
+.compare-modal {position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:24px;background:#101210;color:#eee;border:0;overflow:auto;}
+.compare-modal::backdrop {background:#101210;}
+.compare-modal-head {display:flex;justify-content:space-between;gap:20px;align-items:center;max-width:1200px;margin:0 auto 16px;font:12px "IBM Plex Mono",monospace;}
+.compare-modal .compare-scene {width:min(100%,calc((100dvh - 185px)*1600/975));margin:auto;}
+.compare-modal .compare-controls {max-width:1200px;margin:auto;}
+.compare-error {position:absolute;bottom:20px;left:20px;right:20px;padding:12px;background:#101210;color:white;font-size:14px;pointer-events:none;}
+@media(max-width:759px) {
+ #root .stage-comparison {padding:64px 16px;}
+ #root .compare-heading {display:block;margin-bottom:24px;}
+ #root .compare-heading h2 {font-size:clamp(34px,8.5vw,54px);}
+ #root .compare-heading > p {font-size:16px;max-width:440px;margin-top:20px;}
+ #root .compare-kicker {font-size:12px;letter-spacing:.06em;}
+ #root .compare-frame {padding:4px;}
+ #root .compare-tags {inset:10px 8px auto;}
+ #root .compare-tags span {font-size:10px;padding:7px 10px;letter-spacing:0;}
+ #root .compare-divider > span {width:48px;height:48px;gap:7px;}
+ #root .compare-controls {padding:14px 4px 8px;flex-direction:column;gap:10px;}
+ #root .compare-presets button {padding:8px 19px;font-size:14px;}
+ #root .compare-hint {font-size:12px;}
+ #root .compare-foot {align-items:flex-start;flex-direction:column;gap:4px;font-size:11px;line-height:1.6;}
+ #root .compare-modal {padding:16px;align-content:center;}
+ #root .compare-modal-head {font-size:10px;gap:10px;}
+}
+
+html:has(.compare-modal[open]) {overflow:hidden;}

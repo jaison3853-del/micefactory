@@ -14,6 +14,7 @@ import { services, phone, displayPhone, whatsappUrl } from "./content.js";
 
 const AdvancedCursor = lazy(() => import("./AdvancedCursor.jsx"));
 const CosmicOutro = lazy(() => import("./CosmicOutro.jsx"));
+const StageComparison = lazy(() => import("./StageComparison.jsx"));
 const EventExperiences = lazy(() => import("./EventExperiences.jsx"));
 const WeddingStage = lazy(() => import("./WeddingStage.jsx"));
 
@@ -838,6 +839,8 @@ export default function App() {
             </span>
           </div>
         </section>
+
+        <Suspense fallback={null}><StageComparison /></Suspense>
 
         <Suspense fallback={null}><EventExperiences reduced={reduced} onPlan={openInquiry} /></Suspense>
 
