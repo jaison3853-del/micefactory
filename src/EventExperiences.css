@@ -62,3 +62,41 @@
 }
 @media(prefers-reduced-motion:reduce) { .event-world-image { will-change:auto; }.event-extension * { scroll-behavior:auto; } }
 .reduced-motion .event-world-image { will-change:auto; }
+
+/* Scroll-led editorial motion; all content remains readable without animation. */
+.motion-word-mask { display:inline-block; overflow:hidden; vertical-align:top; padding-bottom:.08em; margin-bottom:-.08em; }
+.motion-word { display:inline-block; transform-origin:left bottom; }
+.motion-overture { height:210svh; background:#0b100c; position:relative; }
+.overture-sticky { height:100svh; position:sticky; top:0; overflow:hidden; isolation:isolate; display:grid; place-items:center; }
+.overture-eyebrow { position:absolute; top:14%; z-index:4; font-size:9px; letter-spacing:.18em; color:#d7ddcc; text-align:center; padding:0 24px; }
+.overture-type { position:relative; z-index:3; font-size:clamp(52px,11.5vw,180px); line-height:.94; font-weight:450; letter-spacing:-.07em; text-align:center; margin:0; pointer-events:none; text-shadow:0 5px 40px #000b; }
+.overture-type em { font-size:.72em; color:#e1e9d2; }
+.overture-card { position:absolute; width:43vw; aspect-ratio:16/10; border-radius:18px; border:1px solid #e7eccf48; box-shadow:0 30px 85px #0008; overflow:hidden; z-index:1; }
+.overture-card img { width:100%; height:100%; object-fit:cover; filter:brightness(.75); }
+.overture-card-one { left:4%; top:25%; transform:rotate(-7deg); }
+.overture-card-two { right:4%; bottom:19%; transform:rotate(9deg); }
+.overture-orbit { position:absolute; width:75vw; height:75vw; border:1px solid #bdcca533; border-radius:50%; background:radial-gradient(ellipse,#6f905324,transparent 65%); z-index:0; }
+.overture-orbit::after { content:''; position:absolute; inset:12%; border:1px dashed #bdcca52b; border-radius:50%; }
+.overture-caption { position:absolute; bottom:10%; font-size:9px; letter-spacing:.15em; text-align:center; padding:0 24px; z-index:4; color:#cad8b8; }
+.overture-progress { position:absolute; bottom:0; left:0; width:100%; height:2px; background:#c8e5a6; transform-origin:left; }
+.event-atmosphere,.event-pointer-light { position:absolute; inset:0; z-index:-2; pointer-events:none; overflow:hidden; }
+.event-pointer-light { background:radial-gradient(ellipse 400px 350px at var(--pointer-x,50%) var(--pointer-y,50%),#f7e7ad30,transparent 75%); opacity:0; transition:opacity .4s; }
+.pointer-lit .event-pointer-light { opacity:1; }
+.event-light-sweep { position:absolute; top:-40%; left:0; width:32%; height:180%; background:linear-gradient(90deg,transparent,#fff2c023,transparent); transform:translateX(-160%) rotate(25deg); animation:event-light-sweep 12s ease-in-out infinite; animation-play-state:paused; }
+.event-spark { width:5px; height:5px; border-radius:50%; position:absolute; background:#ffeabb; box-shadow:0 0 18px 6px #fce5a845; opacity:.2; animation:event-spark-rise 8s ease-in-out infinite alternate; animation-delay:var(--spark-delay); animation-play-state:paused; }
+.world-active .event-light-sweep,.world-active .event-spark { animation-play-state:running; }
+@keyframes event-light-sweep { 0%,15% {transform:translateX(-160%) rotate(25deg);opacity:0;} 40% {opacity:1;} 85%,100% {transform:translateX(480%) rotate(25deg);opacity:0;} }
+@keyframes event-spark-rise { from {transform:translateY(25px) scale(.6);opacity:.15;} to {transform:translateY(-35px) scale(1.2);opacity:.7;} }
+.experience-card { perspective:1000px; }
+.event-outline,.planner-submit { transform-origin:center; }
+.event-outline:focus-visible,.planner-submit:focus-visible { outline:2px solid currentColor; outline-offset:6px; }
+.event-outline span,.planner-submit span { transition:transform .35s; }
+.event-outline:hover span,.planner-submit:hover span { transform:rotate(45deg); }
+@media(max-width:759px) {
+ .motion-overture { height:170svh; }.overture-card { width:72vw; border-radius:12px; }.overture-card-one { left:-8%; top:27%; }.overture-card-two { right:-8%; bottom:22%; }.overture-type { font-size:14vw; }.overture-orbit { width:130vw; height:130vw; }.overture-eyebrow,.overture-caption { font-size:7px; line-height:1.8; }.event-light-sweep { display:none; }.event-spark:nth-child(n+5) { display:none; }
+}
+.reduced-motion .motion-overture { height:100svh; }
+.reduced-motion .event-atmosphere,.reduced-motion .event-pointer-light { display:none; }
+@media(prefers-reduced-motion:reduce) {
+ .motion-overture { height:100svh; }.event-atmosphere,.event-pointer-light { display:none; }.event-outline span,.planner-submit span { transition:none; }
+}

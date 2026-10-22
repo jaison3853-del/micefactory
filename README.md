@@ -86,3 +86,5 @@ The cosmic M-to-logo outro and its restart behavior are retained. The restored f
 The existing SOUND toggle now also enables subtle interaction and section-entry tones. Audio remains off by default, respects mute and pauses when the tab is hidden. Reduced motion removes the new scroll transforms. Existing four-stage opening and cosmic outro are retained.
 
 New responsive WebP visuals are documented in `public/images/events/README.md`; these are native 1672px concept images, not native 4K or client-project photos. New browser tests cover image loading, planner-to-enquiry transfer, FAQ, SFX opt-in/mute, scroll effects and responsive/reduced-motion layouts.
+
+The inspiration section also includes a reversible scroll-driven photo collage, word reveals, rounded-to-fullscreen image transitions, deeper parallax, in-view light sweeps and particles. Fine-pointer devices get pointer lighting, magnetic action buttons and subtle photo-card tilt. These effects clean up when motion is disabled; touch devices retain the scroll effects without pointer interactions. The original four-stage wedding opening remains unchanged.

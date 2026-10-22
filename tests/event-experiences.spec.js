@@ -69,3 +69,38 @@ test('SFX only creates tones after sound is enabled and stops when muted',async(
  await page.evaluate(()=>window.dispatchEvent(new Event('mice:chapter')));
  expect(await page.evaluate(()=>window.__oscillators)).toBe(count);
 });
+
+test('editorial collage scrubs forward and backward and collapses for reduced motion',async({page})=>{
+ await page.goto('/');
+ const stage=page.locator('.motion-overture');
+ await expect(stage).toBeAttached();
+ const seek=async p=>{
+  await stage.evaluate((el,p)=>scrollTo(0,el.offsetTop+(el.offsetHeight-innerHeight)*p),p);
+  await expect.poll(()=>page.locator('.overture-progress').evaluate(el=>Number(getComputedStyle(el).transform.match(/matrix\(([^,]+)/)?.[1]||0))).toBeCloseTo(p,1);
+ };
+ await seek(.2);
+ const first=await page.locator('.overture-card-one').evaluate(el=>getComputedStyle(el).transform);
+ await seek(.8);
+ expect(await page.locator('.overture-card-one').evaluate(el=>getComputedStyle(el).transform)).not.toBe(first);
+ await seek(.2);
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await expect.poll(()=>stage.evaluate(el=>el.offsetHeight/innerHeight)).toBeCloseTo(1,1);
+ await expect(page.locator('.event-atmosphere').first()).toBeHidden();
+ await page.setViewportSize({width:390,height:844});
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
+test('desktop pointer light and magnetic buttons reset when motion is disabled',async({page})=>{
+ await page.goto('/');
+ const panel=page.locator('.event-world').first();
+ await panel.scrollIntoViewIfNeeded();
+ await panel.hover({position:{x:450,y:350}});
+ await expect(panel).toHaveClass(/pointer-lit/);
+ await expect(page.locator('.event-pointer-light').first()).toHaveCSS('opacity','1');
+ const button=page.locator('.event-outline').first();
+ await button.hover({position:{x:20,y:20}});
+ await expect.poll(()=>button.evaluate(el=>Math.abs(new DOMMatrixReadOnly(getComputedStyle(el).transform).m41))).toBeGreaterThan(.5);
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await expect(panel).not.toHaveClass(/pointer-lit/);
+ await expect(button).toHaveCSS('transform','none');
+});
