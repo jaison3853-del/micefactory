@@ -225,6 +225,7 @@ test("WebGL-unavailable devices still get content and navigation", async ({
 
 test("cosmic M resolves to the full logo and further scroll restarts the experience", async ({page}) => {
   await page.goto("/");
+  await expect(page.locator(".backstage-loader")).toHaveCount(0);
   await expect(page.locator(".cosmic-outro")).toBeAttached();
   const end = async () => {
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));

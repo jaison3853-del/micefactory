@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 
-test('loader tracks asset checks, opens and shortens repeat visits',async({page})=>{
+test('loader tracks asset checks, preserves the full intro on first and repeat visits',async({page})=>{
  let release;
  const gate=new Promise(resolve=>release=resolve);
  await page.route('**/assets/wedding-*.webp',async route=>{await gate;await route.continue();});
@@ -12,9 +12,13 @@ test('loader tracks asset checks, opens and shortens repeat visits',async({page}
  release();
  await expect(loader).toHaveCount(0);
  await expect(page.locator('.is-ready')).toHaveClass(/is-ready/);
- expect(await page.evaluate(()=>sessionStorage.getItem('mice-backstage-seen'))).toBe('1');
+
  await page.reload({waitUntil:'domcontentloaded'});
- await expect(page.locator('.backstage-returning')).toHaveCount(1);
+ await expect(loader).toBeVisible();
+ await page.waitForTimeout(1000);
+ await expect(page.locator('.backstage-mark')).toHaveCSS('opacity','1');
+ await expect(page.locator('.backstage-opening')).toHaveCount(1);
+ await expect(page.locator('.backstage-wordmark')).toHaveCSS('opacity','1');
  await expect(loader).toHaveCount(0);
 });
 

@@ -11,25 +11,30 @@ export default function BackstageLoader({reduced,onReady}) {
  const [completed,setCompleted]=useState(0);
  const [opening,setOpening]=useState(false);
  const [hidden,setHidden]=useState(false);
- const [returning]=useState(()=>{try{return sessionStorage.getItem('mice-backstage-seen')==='1';}catch{return false;}});
+
  useEffect(()=>{
   const node=dialog.current;
-  let active=true,ending=false,settled=0,exitTimer;
+  let active=true,ending=false,settled=0,exitTimer,introTimer;
+  const started=performance.now();
   node.showModal();
   document.documentElement.classList.add('backstage-loading');
   const release=()=>{
    if(!active)return;
+   active=false;clearTimeout(introTimer);clearTimeout(exitTimer);
    node.close();document.documentElement.classList.remove('backstage-loading');
-   try{sessionStorage.setItem('mice-backstage-seen','1');}catch{/* Private browsing can deny storage. */}
    setHidden(true);callbacks.current.onReady();
   };
   const open=()=>{
    if(!active||ending)return;
    ending=true;setOpening(true);
-   exitTimer=setTimeout(release,callbacks.current.reduced?120:returning?350:950);
+   exitTimer=setTimeout(release,callbacks.current.reduced?120:2200);
   };
-  finish.current=open;
-  const check=()=>{if(!active||ending)return;settled++;setCompleted(settled);if(settled===4)open();};
+  finish.current=release;
+  const assetsReady=()=>{
+   const remaining=callbacks.current.reduced?0:Math.max(0,1800-(performance.now()-started));
+   introTimer=setTimeout(open,remaining);
+  };
+  const check=()=>{if(!active||ending)return;settled++;setCompleted(settled);if(settled===4)assetsReady();};
   // Progress represents settled critical-asset checks, never a fabricated timer.
   for(const src of [bare,fabric,final]) {
    const image=new Image();image.src=src;
@@ -37,10 +42,10 @@ export default function BackstageLoader({reduced,onReady}) {
   }
   Promise.all([document.fonts.load('800 24px "Manrope Variable"'),document.fonts.load('400 12px "IBM Plex Mono"')]).then(check,check);
   const timeout=setTimeout(open,6500); // An unavailable image must never trap the visitor.
-  return()=>{active=false;clearTimeout(timeout);clearTimeout(exitTimer);node.close();document.documentElement.classList.remove('backstage-loading');};
- },[returning]);
+  return()=>{active=false;clearTimeout(timeout);clearTimeout(introTimer);clearTimeout(exitTimer);node.close();document.documentElement.classList.remove('backstage-loading');};
+ },[]);
  if(hidden)return null;
- return <dialog ref={dialog} className={`backstage-loader ${opening?'backstage-opening':''} ${returning?'backstage-returning':''} ${reduced?'backstage-reduced':''}`} aria-label="Opening MICEFACTORY Events" onCancel={e=>{e.preventDefault();finish.current();}}>
+ return <dialog ref={dialog} className={`backstage-loader ${opening?'backstage-opening':''} ${reduced?'backstage-reduced':''}`} aria-label="Opening MICEFACTORY Events" onCancel={e=>{e.preventDefault();finish.current();}}>
   <div className="backstage-panel backstage-panel-left"/><div className="backstage-panel backstage-panel-right"/>
   <div className="backstage-spotlight" aria-hidden="true"/>
   <div className="backstage-content">
