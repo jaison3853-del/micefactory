@@ -9,6 +9,7 @@ import React, {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import BackstageLoader from "./BackstageLoader.jsx";
 import { services, phone, displayPhone, whatsappUrl } from "./content.js";
 
 const AdvancedCursor = lazy(() => import("./AdvancedCursor.jsx"));
@@ -23,14 +24,6 @@ const Arrow = ({ diagonal = false, ...props }) => (
       d={diagonal ? "M5 19 19 5M5 5h14v14" : "M4 12h16m-6-6 6 6-6 6"}
       stroke="currentColor"
       strokeWidth="1.5"
-    />
-  </svg>
-);
-const Mark = () => (
-  <svg viewBox="0 0 48 48" aria-hidden="true">
-    <path
-      d="M5 36V12h6l13 17 13-17h6v24h-7V24L24 39 12 24v12Z"
-      fill="currentColor"
     />
   </svg>
 );
@@ -432,14 +425,11 @@ export default function App() {
   }, [reduced]);
 
   useEffect(() => {
-    if (menu || activeService || inquiry !== null) lenis.current?.stop();
+    if (!ready || menu || activeService || inquiry !== null) lenis.current?.stop();
     else lenis.current?.start();
-  }, [menu, activeService, inquiry]);
+  }, [ready, menu, activeService, inquiry]);
 
-  useEffect(() => {
-    const timer = setTimeout(onReady, 3000);
-    return () => clearTimeout(timer);
-  }, [onReady]);
+  useEffect(() => { if(ready) ScrollTrigger.refresh(); }, [ready]);
 
   useEffect(() => {
     const update = () =>
@@ -484,11 +474,7 @@ export default function App() {
       <a className="skip-link" href="#about">
         Skip to content
       </a>
-      <div className="loading-screen" aria-hidden={ready}>
-        <Mark />
-        <span className="mono">MAKING ROOM FOR EXTRAORDINARY</span>
-        <div className="loading-line" />
-      </div>
+      <BackstageLoader reduced={reduced} onReady={onReady} />
       <header className={`header ${solidHeader ? "header-solid" : ""}`}>
         <Brand />
         <span className="header-note mono">
@@ -519,7 +505,6 @@ export default function App() {
               <Suspense fallback={null}>
                 <WeddingStage
                   reduced={reduced}
-                  onReady={onReady}
                   onPhase={onPhase}
                 />
               </Suspense>

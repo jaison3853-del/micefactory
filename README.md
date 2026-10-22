@@ -94,3 +94,7 @@ Desktop fine-pointer users now get a contextual cursor with an eased tracking ri
 ## Mobile readability
 
 `src/mobile.css` provides a separate readable phone composition: 12px metadata, 16px body/form text, larger headings, 44px-or-larger primary touch targets, higher contrast and a stage image separated from the hero text. Portrait screens from 320px and short landscape layouts are covered. Phone event imagery keeps its captions on a dark readable surface, planner options stack, and navigation/dialogs scroll naturally. Mobile skips masked word reveals, velocity skew and long collage pinning while retaining lighter photo parallax and the four-stage opening. Desktop effects remain available. Responsive behavior updates when the 759px breakpoint changes.
+
+### Backstage opening
+
+`BackstageLoader` checks the three local wedding-stage images and local brand fonts before opening the curtain panels. The progress strip represents settled asset checks, not simulated download percentages. Failed checks, an explicit Enter Website / Escape action, or a 6.5-second safeguard allow entry. Repeat visits in the same session use a shorter exit; reduced-motion visitors get a minimal transition. The native modal keeps keyboard focus inside the loader until entry, then releases scrolling. No audio plays from the loader.

@@ -1,0 +1,45 @@
+html.backstage-loading {overflow:hidden;}
+.backstage-loader {position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;padding:0;margin:0;border:0;background:transparent;color:#f5ead3;overflow:hidden;isolation:isolate;}
+.backstage-loader::backdrop {background:transparent;}
+.backstage-panel {position:absolute;top:0;bottom:0;width:50.1%;z-index:-2;background:linear-gradient(90deg,#050707,#11100b);will-change:transform;}
+.backstage-panel-left {left:0;border-right:1px solid #c6a56426;}
+.backstage-panel-right {right:0;background:linear-gradient(90deg,#11100b,#050707);}
+.backstage-spotlight {position:absolute;left:12%;right:12%;top:-18%;height:105%;pointer-events:none;z-index:-1;background:conic-gradient(from 157deg at 50% 0%,transparent,#edc7751f 7deg,#ffdfa236 23deg,#edc7751f 39deg,transparent 46deg);mask-image:linear-gradient(#000 30%,transparent);animation:backstage-light .8s ease-out both;}
+.backstage-content {height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 20px;text-align:center;}
+.backstage-eyebrow {font:11px "IBM Plex Mono",monospace;letter-spacing:.16em;color:#bcb299;position:absolute;top:12%;}
+.backstage-identity {position:relative;width:min(88vw,1000px);height:180px;display:grid;place-items:center;}
+.backstage-mark {width:110px;height:88px;filter:drop-shadow(0 0 16px #deb96955);}
+.backstage-mark path {fill:#e5c18108;stroke:#e6c68e;stroke-width:1.2;stroke-dasharray:1;stroke-dashoffset:1;animation:backstage-draw .8s ease-out forwards;}
+.backstage-wordmark {position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transform:translateY(12px);}
+.backstage-wordmark strong {font-family:"Manrope Variable",sans-serif;font-size:clamp(28px,8.5vw,108px);font-weight:800;letter-spacing:-.045em;line-height:1.2;}
+.backstage-wordmark > span {font:600 clamp(10px,1.4vw,18px) "Manrope Variable",sans-serif;letter-spacing:.01em;line-height:1.6;margin-top:10px;}
+.backstage-wordmark b {font-size:1.2em;}
+.backstage-message {font:12px "IBM Plex Mono",monospace;letter-spacing:.16em;margin:30px 0 24px;color:#e6d9bb;}
+.backstage-progress {width:min(260px,65vw);height:2px;background:#d8b77225;}
+.backstage-progress > span {display:block;height:100%;width:100%;transform-origin:left;background:#e7c686;box-shadow:0 0 14px #f3ce7b88;transition:transform .18s ease;}
+.backstage-enter {position:absolute;bottom:max(7%,env(safe-area-inset-bottom));min-height:44px;padding:12px 22px;color:#cec8b8;font:11px "IBM Plex Mono",monospace;letter-spacing:.08em;border:1px solid #d1c39c33;border-radius:30px;}
+.backstage-enter span {margin-left:18px;}
+.backstage-enter:focus-visible {outline:2px solid #f4d397;outline-offset:5px;}
+.backstage-opening .backstage-mark {opacity:0;transition:opacity .15s;}
+.backstage-opening .backstage-wordmark {opacity:1;transform:none;transition:opacity .2s,transform .3s;}
+.backstage-opening .backstage-panel-left {transform:translateX(-101%);transition:transform .6s .3s cubic-bezier(.65,0,.25,1);}
+.backstage-opening .backstage-panel-right {transform:translateX(101%);transition:transform .6s .3s cubic-bezier(.65,0,.25,1);}
+.backstage-opening .backstage-content,.backstage-opening .backstage-spotlight {animation:backstage-exit .4s .5s both;}
+.backstage-returning.backstage-opening .backstage-panel {transition-duration:.25s;transition-delay:0s;}
+.backstage-returning.backstage-opening .backstage-content,.backstage-returning.backstage-opening .backstage-spotlight {animation-duration:.25s;animation-delay:0s;}
+.backstage-reduced * {animation:none!important;transition:none!important;}
+.backstage-reduced .backstage-mark path {stroke-dashoffset:0;}
+@keyframes backstage-light {from{opacity:0;}to{opacity:1;}}
+@keyframes backstage-draw {to{stroke-dashoffset:0;}}
+@keyframes backstage-exit {to{opacity:0;}}
+@media(max-width:759px) {
+ .backstage-identity {height:130px;width:90vw;}
+ .backstage-eyebrow {font-size:11px;letter-spacing:.05em;top:14%;}
+ .backstage-wordmark strong {font-size:8.4vw;}
+ .backstage-wordmark > span {font-size:10px;max-width:310px;}
+ .backstage-wordmark b {display:block;font-size:14px;margin-top:4px;}
+ .backstage-message {font-size:12px;letter-spacing:.06em;}
+ .backstage-enter {font-size:12px;}
+ .backstage-spotlight {left:-20%;right:-20%;}
+}
+@media(prefers-reduced-motion:reduce) {.backstage-loader *{animation:none!important;transition:none!important;}.backstage-mark path{stroke-dashoffset:0;}}
