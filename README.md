@@ -98,10 +98,3 @@ Desktop fine-pointer users now get a contextual cursor with an eased tracking ri
 ### Backstage opening
 
 `BackstageLoader` checks the three local wedding-stage images and local brand fonts before opening the curtain panels. The progress strip represents settled asset checks, not simulated download percentages. Failed checks, an explicit Enter Website / Escape action, or a 6.5-second safeguard allow entry. Normal visits, including reloads, reserve 1.8 seconds for the M drawing and 2.2 seconds for the logo and curtain reveal. Enter Website / Escape skips immediately; reduced-motion visitors get a minimal transition. The native modal keeps keyboard focus inside the loader until entry, then releases scrolling. No audio plays from the loader.
-
-### Stage comparison
-
-The transformation section compares the existing bare/final stage visualisations using a native range input and a shared image crop. Drag or use arrow/Home/End keys; Before/Compare/After presets and a native fullscreen dialog provide alternate controls. The dialog supports Escape and restores opener focus. No autoplay, extra image downloads, or motion-dependent interaction is required.
-
-### Wedding design collection
-Eight AI-generated Hindu/Christian stage concepts, with premium and semi-premium filters, responsive 640/1536px WebP images, lazy loading, keyboard-accessible fullscreen preview, and editable enquiry prefilling. Images are clearly labeled as concepts rather than completed client events. Original generated PNGs are retained outside the repository; optimized website assets live in public/images/wedding-concepts/.
