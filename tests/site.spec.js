@@ -138,7 +138,7 @@ test("enquiry validates name and prepares the selected service without sending a
     .getByLabel("Tell us a little more")
     .fill("A corporate gathering for 100 guests.");
   await page.getByRole("button", { name: "CONTINUE ON WHATSAPP" }).click();
-  await expect(page.getByRole("status")).toContainText(
+  await expect(page.getByRole("dialog", {name:"Plan your event"}).getByRole("status")).toContainText(
     "Your next chapter awaits.",
   );
   const target = new URL(await page.evaluate(() => window.__openedUrl));
