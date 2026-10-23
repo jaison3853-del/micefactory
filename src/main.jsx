@@ -6,9 +6,11 @@ import "lenis/dist/lenis.css";
 import "./styles.css";
 import "./mobile.css";
 import App from "./App.jsx";
+const GalleryPage = React.lazy(() => import("./GalleryPage.jsx"));
+const isGallery = /^\/gallery\/?$/.test(window.location.pathname);
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    {isGallery ? <React.Suspense fallback={<p style={{padding:32}}>Opening gallery…</p>}><GalleryPage /></React.Suspense> : <App />}
   </React.StrictMode>,
 );

@@ -954,6 +954,10 @@ export default function App() {
           </div>
         </section>
       </main>
+      <aside className="instagram-connect" aria-label="Explore our photo gallery">
+        <div><span className="mono">REAL MOMENTS / THE MICEFACTORY COLLECTION</span><p>Every frame, a feeling.</p></div>
+        <a href="/gallery"><span>EXPLORE OUR GALLERY<b>Weddings. Stages. Celebrations.</b></span><Arrow diagonal /></a>
+      </aside>
       <aside className="instagram-connect" aria-label="Follow our events on Instagram">
         <div><span className="mono">MORE MOMENTS. MORE INSPIRATION.</span><p>See what we’re creating.</p></div>
         <a href="https://www.instagram.com/teammicefactory/" target="_blank" rel="noopener noreferrer" aria-label="Visit @teammicefactory on Instagram (opens in a new tab)">
@@ -984,6 +988,7 @@ export default function App() {
             PEOPLE. IDEAS. SPACES. EXPERIENCES.
           </span>
           <nav aria-label="Main navigation">
+            <a href="/gallery"><span className="mono">G</span>Gallery<Arrow diagonal /></a>
             {[
               ["01", "Our story", "#about"],
               ["02", "Expertise", "#expertise"],

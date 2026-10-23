@@ -98,3 +98,8 @@ Desktop fine-pointer users now get a contextual cursor with an eased tracking ri
 ### Backstage opening
 
 `BackstageLoader` checks the three local wedding-stage images and local brand fonts before opening the curtain panels. The progress strip represents settled asset checks, not simulated download percentages. Failed checks, an explicit Enter Website / Escape action, or a 6.5-second safeguard allow entry. Normal visits, including reloads, reserve 1.8 seconds for the M drawing and 2.2 seconds for the logo and curtain reveal. Enter Website / Escape skips immediately; reduced-motion visitors get a minimal transition. The native modal keeps keyboard focus inside the loader until entry, then releases scrolling. No audio plays from the loader.
+
+### Separate client-photo gallery
+The /gallery page uses 72 unique photos from the user-provided Instagram ZIP (10 exact duplicate files omitted). Categories were assigned by visual review: weddings/celebrations, stage/decor, live shows, ceremonies/gatherings, behind the scenes, and announcements. Source filenames are retained in src/gallery-data.json for traceability. No identity, religion, venue, or budget classifications are inferred from people in photos.
+
+Responsive WebP assets preserve original proportions without upscaling. The page offers category filters and a native modal viewer with arrow keys, touch swipes, Escape, focus restoration and reduced-motion support. Home navigation and the footer-area gallery link lead to /gallery; Vercel rewrites support direct visits and reloads.
