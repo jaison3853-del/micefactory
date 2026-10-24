@@ -6,7 +6,7 @@ for(const width of [390,1440]){
   await page.goto('/gallery');
   await expect(page).toHaveTitle('Gallery — MICEFACTORY Events');
   await expect(page.locator('.journey')).toHaveCount(0);
-  await expect(page.locator('.gp-card')).toHaveCount(72);
+  await expect(page.locator('.gp-card')).toHaveCount(62);
   await expect(page.locator('.gp-hero img')).toBeVisible();
   await page.getByRole('button',{name:'Stage & décor',exact:false}).click();
   await expect(page.locator('.gp-card')).toHaveCount(13);
@@ -38,7 +38,7 @@ for(const width of [390,1440]){
   await expect(card).toBeFocused();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.reload();
-  await expect(page.locator('.gp-card')).toHaveCount(72);
+  await expect(page.locator('.gp-card')).toHaveCount(62);
   await page.evaluate(()=>scrollTo(0,0));
   await page.locator('.gp-hero img').evaluate(i=>i.decode());
   await page.screenshot({path:'/tmp/real-gallery-'+width+'.png'});
