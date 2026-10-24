@@ -2,7 +2,7 @@
 
 A responsive event studio website built with React, Vite, Three.js, GSAP and Lenis.
 
-The opening scene builds a wedding venue in four viewport-height chapters: the bare venue is dressed in crimson fabric, flowers and seating develop from the stage down the aisle, the complete stage is revealed, and the final chapter plays the first five seconds of the supplied stage film. Its audio stream is removed during encoding. Playback pauses offscreen/when hidden; reduced-motion mode offers a play button. The page ends in a dark cosmic monogram-to-wordmark animation; a further downward wheel, touch swipe or keyboard scroll at the end restarts the experience. A restart button is also available. Aligned photographic layers use broad feathered reveals with scroll smoothing; individual flying cutouts are removed. Reverse scrolling undoes the construction. Mobile retains the landscape frame and reduced-motion mode shows the final stage immediately. The remaining site presents services and the company brochure.
+The opening scene builds a wedding venue in four viewport-height chapters: the bare venue is dressed in crimson fabric, flowers and seating develop from the stage down the aisle, the complete stage is revealed, and a final live-lighting chapter adds moving spotlight beams, candle glow and floor reflections. Motion pauses offscreen and when the tab is hidden; reduced motion disables it. Aligned photographic layers use broad feathered reveals with scroll smoothing; individual flying cutouts are removed. Reverse scrolling undoes the construction. Mobile retains the landscape frame and reduced-motion mode shows the final stage immediately. The remaining site presents services and the company brochure.
 
 ## Run locally
 
@@ -76,3 +76,30 @@ The wedding scene supersedes the earlier ice/portal reference. The reference-ins
 OS reduced-motion preferences show the finished stage immediately without an extended scroll journey. Sound stays off until explicitly enabled. Image assets are bundled locally, including in the portable export.
 
 Each cloud task already has an isolated checkout. Reuse it; do not create a Git worktree unless explicitly requested.
+
+The cosmic M-to-logo outro and its restart behavior are retained. The restored four-chapter stage does not load or play construction videos; its final lights continue animating while the stage remains visible.
+
+## Extended event experience
+
+`src/EventExperiences.jsx` adds two cinematic concept-image sections, scroll parallax and typography, a guest-count/style/support brief builder, and accessible native FAQ accordions. The brief builder prefills the existing enquiry dialog; visitors review their name and details before opening WhatsApp. It does not quote prices or create bookings. New navigation links reach inspiration and the planner.
+
+The existing SOUND toggle now also enables subtle interaction and section-entry tones. Audio remains off by default, respects mute and pauses when the tab is hidden. Reduced motion removes the new scroll transforms. Existing four-stage opening and cosmic outro are retained.
+
+New responsive WebP visuals are documented in `public/images/events/README.md`; these are native 1672px concept images, not native 4K or client-project photos. New browser tests cover image loading, planner-to-enquiry transfer, FAQ, SFX opt-in/mute, scroll effects and responsive/reduced-motion layouts.
+
+The inspiration section also includes a reversible scroll-driven photo collage, word reveals, rounded-to-fullscreen image transitions, deeper parallax, in-view light sweeps and particles. Fine-pointer devices get pointer lighting, magnetic action buttons and subtle photo-card tilt. These effects clean up when motion is disabled; touch devices retain the scroll effects without pointer interactions. The original four-stage wedding opening remains unchanged.
+
+Desktop fine-pointer users now get a contextual cursor with an eased tracking ring, EXPLORE/arrow states and a click pulse. Keyboard navigation, forms, native dialogs, touch and reduced-motion preferences retain native cursor behavior. The cursor uses a demand-driven animation frame loop and never captures pointer events. Additional scroll effects fill outline typography, carry warm light into cooler event imagery, briefly skew photos with scroll velocity, and gather light points toward the cosmic signature. Existing sound opt-in and the four-stage opening are unchanged.
+
+## Mobile readability
+
+`src/mobile.css` provides a separate readable phone composition: 12px metadata, 16px body/form text, larger headings, 44px-or-larger primary touch targets, higher contrast and a stage image separated from the hero text. Portrait screens from 320px and short landscape layouts are covered. Phone event imagery keeps its captions on a dark readable surface, planner options stack, and navigation/dialogs scroll naturally. Mobile skips masked word reveals, velocity skew and long collage pinning while retaining lighter photo parallax and the four-stage opening. Desktop effects remain available. Responsive behavior updates when the 759px breakpoint changes.
+
+### Backstage opening
+
+`BackstageLoader` checks the three local wedding-stage images and local brand fonts before opening the curtain panels. The progress strip represents settled asset checks, not simulated download percentages. Failed checks, an explicit Enter Website / Escape action, or a 6.5-second safeguard allow entry. Normal visits, including reloads, reserve 1.8 seconds for the M drawing and 2.2 seconds for the logo and curtain reveal. Enter Website / Escape skips immediately; reduced-motion visitors get a minimal transition. The native modal keeps keyboard focus inside the loader until entry, then releases scrolling. No audio plays from the loader.
+
+### Separate client-photo gallery
+The /gallery page uses 62 selected photos from the user-provided Instagram ZIP (10 exact duplicates and 10 user-selected photos omitted). Gallery card numbers retain the original photo IDs. Categories were assigned by visual review: weddings/celebrations, stage/decor, live shows, ceremonies/gatherings, behind the scenes, and announcements. Source filenames are retained in src/gallery-data.json for traceability. No identity, religion, venue, or budget classifications are inferred from people in photos.
+
+Responsive WebP assets preserve original proportions without upscaling. The page offers category filters and a native modal viewer with arrow keys, touch swipes, Escape, focus restoration and reduced-motion support. Home navigation and the footer-area gallery link lead to /gallery; Vercel rewrites support direct visits and reloads.

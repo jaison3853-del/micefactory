@@ -9,6 +9,7 @@ export default function CosmicOutro({ reduced, onRestart }) {
     let armedAt = 0;
     let touchY = null;
     const render = p => {
+      node.style.setProperty("--assemble", clamp(p / .38));
       node.style.setProperty("--rise", clamp(p / .48));
       node.style.setProperty("--logo", clamp((p - .44) / .28));
       node.dataset.complete = String(p >= .85);
@@ -17,6 +18,7 @@ export default function CosmicOutro({ reduced, onRestart }) {
     };
     render(reduced ? 1 : 0);
     const trigger = reduced ? null : ScrollTrigger.create({trigger: node, start: "top top", end: "bottom bottom", onUpdate: self => render(self.progress), onRefresh: self => render(self.progress)});
+    const entrance = reduced ? null : ScrollTrigger.create({trigger:node,start:"top bottom",end:"top top",onUpdate:self=>node.style.setProperty("--arrival",self.progress),onRefresh:self=>node.style.setProperty("--arrival",self.progress)});
     const atEnd = () => innerHeight + scrollY >= document.documentElement.scrollHeight - 8;
     const restart = event => {
       if (!atEnd() || !armedAt || Date.now() - armedAt < 700 || document.querySelector("dialog[open]")) return;
@@ -37,7 +39,7 @@ export default function CosmicOutro({ reduced, onRestart }) {
     window.addEventListener("touchmove", touchMove, {passive: false});
     ScrollTrigger.refresh();
     return () => {
-      trigger?.kill();
+      trigger?.kill(); entrance?.kill();
       window.removeEventListener("wheel", wheel);
       window.removeEventListener("keydown", key);
       window.removeEventListener("touchstart", touchStart);
@@ -46,6 +48,8 @@ export default function CosmicOutro({ reduced, onRestart }) {
   }, [reduced, onRestart]);
   return <section ref={root} className={`cosmic-outro ${reduced ? "cosmic-reduced" : ""}`} aria-label="MICEFACTORY closing experience">
     <div className="cosmic-screen">
+      <div className="cosmic-entry-glow" aria-hidden="true"/>
+      <div className="cosmic-seed-field" aria-hidden="true">{[[5,36],[5,24],[5,12],[11,12],[17,20],[24,29],[31,20],[37,12],[43,12],[43,24],[43,36],[37,36],[36,24],[30,32],[24,39],[18,32],[12,24],[11,36]].map(([x,y],i)=><i key={i} style={{left:`${x/48*100}%`,top:`${y/48*100}%`,"--seed-x":`${Math.cos(i*2.4)*45}vw`,"--seed-y":`${Math.sin(i*2.4)*45}vh`}}/>)}</div>
       <div className="cosmic-stars" aria-hidden="true" />
       <div className="cosmic-orbit" aria-hidden="true" />
       <p className="cosmic-caption mono">EVERY END IS A NEW BEGINNING.</p>

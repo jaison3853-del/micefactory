@@ -1,6 +1,24 @@
 import { test, expect } from "@playwright/test";
 import { phone, validatedPhone, whatsappUrl } from "../src/content.js";
 
+test("mobile four-stage lighting experience never loads video", async ({page}) => {
+  await page.setViewportSize({width:390,height:844});
+  const videoRequests = [];
+  page.on("request", request => {
+    if (/\.mp4(?:[?#]|$)|vercel-storage\.com/.test(request.url())) videoRequests.push(request.url());
+  });
+  await page.goto("/");
+  await expect(page.locator(".is-ready")).toBeAttached();
+  const travel = await page.locator(".journey").evaluate(el => el.offsetHeight-innerHeight);
+  for (const [p, phase] of [[.1,0],[.45,1],[.74,2],[.97,3],[.45,1],[0,0]]) {
+    await page.evaluate(y=>scrollTo(0,y),travel*p);
+    await expect(page.locator(".wedding-scene")).toHaveAttribute("data-phase",String(phase));
+  }
+  await expect(page.locator("video")).toHaveCount(0);
+  expect(videoRequests).toEqual([]);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
 test("only the confirmed complete phone number is used for enquiries", () => {
   expect(phone).toBe("+919567495707");
   expect(validatedPhone("+91 956795707")).toBeNull();
@@ -38,11 +56,9 @@ test("wedding stage builds through four continuous chapters and reverses without
   await expect.poll(() => page.locator(".wedding-scene").evaluate(el => parseFloat(el.style.getPropertyValue("--floral-edge")))) .toBe(128);
   await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
   await expect(page.locator(".wedding-scene")).toHaveClass(/lights-running/);
-  const video = page.locator(".stage-film");
-  await expect.poll(() => video.evaluate(el => el.currentTime)).toBeGreaterThan(.1);
-  expect(await video.evaluate(el => el.muted)).toBe(true);
-  expect(await video.evaluate(el => el.duration)).toBeCloseTo(5, 1);
-  await expect.poll(() => video.evaluate(el => el.ended), {timeout: 8000}).toBe(true);
+  const beam = page.locator(".stage-spotlight").first();
+  const firstTransform = await beam.evaluate(el => getComputedStyle(el).transform);
+  await expect.poll(() => beam.evaluate(el => getComputedStyle(el).transform)).not.toBe(firstTransform);
   await page.evaluate(() => window.scrollTo(0, document.querySelector("#about").offsetTop + 120));
   await expect(page.locator(".wedding-scene")).not.toHaveClass(/lights-running/);
   await page.evaluate((y) => window.scrollTo(0, y), travel * 0.55);
@@ -122,7 +138,7 @@ test("enquiry validates name and prepares the selected service without sending a
     .getByLabel("Tell us a little more")
     .fill("A corporate gathering for 100 guests.");
   await page.getByRole("button", { name: "CONTINUE ON WHATSAPP" }).click();
-  await expect(page.getByRole("status")).toContainText(
+  await expect(page.getByRole("dialog", {name:"Plan your event"}).getByRole("status")).toContainText(
     "Your next chapter awaits.",
   );
   const target = new URL(await page.evaluate(() => window.__openedUrl));
@@ -153,8 +169,7 @@ test("mobile layouts, reduced motion, sound and navigation remain usable", async
   ).toBe(true);
   await expect(page.locator("h1")).toHaveText("Let the evening glow.");
   await expect.poll(() => page.locator(".stage-finish").evaluate(el => Number(getComputedStyle(el).opacity))).toBe(1);
-  expect(await page.locator(".stage-film").evaluate(el => el.paused)).toBe(true);
-  await expect(page.getByRole("button", {name:"PLAY STAGE FILM · 5 SEC ↗"})).toBeVisible();
+  await expect(page.locator(".live-stage-lights")).toBeHidden();
   const frame = await page.locator(".stage-frame").boundingBox();
   expect(frame.width / frame.height).toBeCloseTo(16 / 9, 1);
   for (const width of [320, 390, 768, 1440]) {
@@ -180,7 +195,7 @@ test("mobile layouts, reduced motion, sound and navigation remain usable", async
   ).toBeVisible();
   expect(
     await page
-      .locator("dialog")
+      .locator("dialog[open]")
       .evaluate((el) => el.scrollWidth <= el.clientWidth),
   ).toBe(true);
 });
@@ -210,6 +225,7 @@ test("WebGL-unavailable devices still get content and navigation", async ({
 
 test("cosmic M resolves to the full logo and further scroll restarts the experience", async ({page}) => {
   await page.goto("/");
+  await expect(page.locator(".backstage-loader")).toHaveCount(0);
   await expect(page.locator(".cosmic-outro")).toBeAttached();
   const end = async () => {
     await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));

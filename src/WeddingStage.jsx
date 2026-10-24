@@ -1,35 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import bareStage from "./assets/wedding-bare.webp";
 import drapedStage from "./assets/wedding-draped.webp";
 import finalStage from "./assets/wedding-final.webp";
-import stageFilm from "./assets/stage-film.mp4";
 
 const clamp = value => Math.max(0, Math.min(1, value));
 const progress = (value, start, end) => clamp((value - start) / (end - start));
 
 export default function WeddingStage({ reduced, onReady, onPhase }) {
   const scene = useRef(null);
-  const film = useRef(null);
-  const [filmVisible, setFilmVisible] = useState(false);
-  const [playBlocked, setPlayBlocked] = useState(false);
-  const playFilm = () => {
-    const video = film.current;
-    if (!video) return;
-    video.muted = true;
-    video.play().then(() => { setFilmVisible(true); setPlayBlocked(false); }).catch(error => { if (error.name !== "AbortError") setPlayBlocked(true); });
-  };
   useEffect(() => {
     const node = scene.current;
     let lastPhase = -1;
     let inView = true;
-    const syncLights = () => {
-      const active = !reduced && inView && !document.hidden && lastPhase === 3;
-      node.classList.toggle("lights-running", active);
-      if (active && film.current && !film.current.ended) playFilm();
-      else if (!active) film.current?.pause();
-    };
+    const syncLights = () => node.classList.toggle("lights-running", !reduced && inView && !document.hidden && lastPhase === 3);
     const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting && entry.intersectionRatio > .01; syncLights(); }, { threshold: [0, .01] });
     observer.observe(node);
     document.addEventListener("visibilitychange", syncLights);
@@ -45,17 +30,7 @@ export default function WeddingStage({ reduced, onReady, onPhase }) {
       node.style.setProperty("--live-lights", progress(p, .83, .95));
       const phase = p < .30 ? 0 : p < .65 ? 1 : p < .84 ? 2 : 3;
       node.dataset.phase = String(phase);
-      if (phase !== lastPhase) {
-        onPhase(phase);
-        if (phase !== 3) {
-          film.current?.pause();
-          if (film.current) film.current.currentTime = 0;
-          setFilmVisible(false);
-          setPlayBlocked(false);
-        }
-        lastPhase = phase;
-        syncLights();
-      }
+      if (phase !== lastPhase) { onPhase(phase); lastPhase = phase; syncLights(); }
     };
     draw(reduced ? 1 : 0);
     if (reduced) return () => { observer.disconnect(); document.removeEventListener("visibilitychange", syncLights); };
@@ -66,14 +41,17 @@ export default function WeddingStage({ reduced, onReady, onPhase }) {
     });
     return () => { animation.scrollTrigger?.kill(); animation.kill(); observer.disconnect(); document.removeEventListener("visibilitychange", syncLights); };
   }, [reduced, onPhase]);
-  return <div className="wedding-scene" ref={scene} role="img" aria-label="A wedding venue builds continuously over four scroll chapters: fabric dresses the stage from the ceiling down, flowers and seating fill the stage and aisle, the completed stage is revealed, then a five-second silent film brings it to life.">
+  return <div className="wedding-scene" ref={scene} role="img" aria-label="A wedding venue builds continuously over four scroll chapters: fabric dresses the stage from the ceiling down, flowers and seating fill the stage and aisle, the completed stage is revealed, then moving spotlights and candlelight bring it to life.">
     <div className="stage-frame"><div className="stage-plane">
       <img className="stage-image stage-bare" src={bareStage} alt="" onLoad={onReady} onError={onReady} fetchPriority="high" />
       <img className="stage-image stage-fabric" src={drapedStage} alt="" />
       <img className="stage-image stage-finish" src={finalStage} alt="" />
       <div className="stage-light" />
-      <video ref={film} className={`stage-film ${filmVisible ? "is-playing" : ""}`} src={stageFilm} muted playsInline preload="metadata" poster={finalStage} aria-label="Five-second silent wedding stage film" />
-      {(playBlocked || reduced) && <button className="film-play mono" onClick={playFilm}>PLAY STAGE FILM · 5 SEC ↗</button>}
+      <div className="live-stage-lights" aria-hidden="true">
+        {[18, 29, 36, 44, 58, 65, 73, 82].map((left, i) => <div className="stage-spotlight" key={left} style={{ left: `${left}%`, "--angle": `${i % 2 ? -12 : 12}deg`, "--duration": `${7 + i % 3 * 2}s`, "--delay": `${-i * 1.4}s` }}><i /></div>)}
+        <div className="floor-light-pattern" />
+        {[[23,94],[31,80],[36,70],[39,63],[77,94],[69,80],[64,70],[61,63],[4,59],[96,59],[23,31],[74,31]].map(([left,top],i) => <span className="candle-glow" key={i} style={{left:`${left}%`,top:`${top}%`,"--delay":`${-i*.7}s`}} />)}
+      </div>
     </div></div>
     <div className="stage-progress" aria-hidden="true"><span /></div>
   </div>;

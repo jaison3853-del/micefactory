@@ -9,9 +9,12 @@ import React, {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import BackstageLoader from "./BackstageLoader.jsx";
 import { services, phone, displayPhone, whatsappUrl } from "./content.js";
 
+const AdvancedCursor = lazy(() => import("./AdvancedCursor.jsx"));
 const CosmicOutro = lazy(() => import("./CosmicOutro.jsx"));
+const EventExperiences = lazy(() => import("./EventExperiences.jsx"));
 const WeddingStage = lazy(() => import("./WeddingStage.jsx"));
 
 gsap.registerPlugin(ScrollTrigger);
@@ -21,14 +24,6 @@ const Arrow = ({ diagonal = false, ...props }) => (
       d={diagonal ? "M5 19 19 5M5 5h14v14" : "M4 12h16m-6-6 6 6-6 6"}
       stroke="currentColor"
       strokeWidth="1.5"
-    />
-  </svg>
-);
-const Mark = () => (
-  <svg viewBox="0 0 48 48" aria-hidden="true">
-    <path
-      d="M5 36V12h6l13 17 13-17h6v24h-7V24L24 39 12 24v12Z"
-      fill="currentColor"
     />
   </svg>
 );
@@ -77,6 +72,43 @@ function Photo({ image, alt, className = "", lazy = true }) {
 function SoundToggle() {
   const [enabled, setEnabled] = useState(false);
   const sound = useRef(null);
+  useEffect(() => {
+    let lastSound = 0;
+    const play = (event) => {
+      const audio = sound.current;
+      if (!audio?.enabled || document.hidden || audio.context.state !== "running") return;
+      if (event.type === "click" && (!event.target.closest("button,a,summary,input,select") || event.target.closest(".sound-toggle"))) return;
+      const now = audio.context.currentTime;
+      if (now - lastSound < .12) return;
+      lastSound = now;
+      const chapter = event.type === "mice:chapter";
+      const oscillator = audio.context.createOscillator();
+      const envelope = audio.context.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(chapter ? 330 : 740, now);
+      oscillator.frequency.exponentialRampToValueAtTime(chapter ? 495 : 520, now + .15);
+      envelope.gain.setValueAtTime(0, now);
+      envelope.gain.linearRampToValueAtTime(chapter ? .035 : .018, now + .025);
+      envelope.gain.exponentialRampToValueAtTime(.0001, now + (chapter ? .65 : .18));
+      oscillator.connect(envelope); envelope.connect(audio.effects);
+      oscillator.start(now); oscillator.stop(now + .7);
+      oscillator.onended = () => { oscillator.disconnect(); envelope.disconnect(); };
+    };
+    const visibility = () => {
+      const audio = sound.current;
+      if (!audio) return;
+      if (document.hidden) audio.context.suspend().catch(() => {});
+      else if (audio.enabled) audio.context.resume().catch(() => {});
+    };
+    document.addEventListener("click", play);
+    window.addEventListener("mice:chapter", play);
+    document.addEventListener("visibilitychange", visibility);
+    return () => {
+      document.removeEventListener("click", play);
+      window.removeEventListener("mice:chapter", play);
+      document.removeEventListener("visibilitychange", visibility);
+    };
+  }, []);
   useEffect(
     () => () => {
       sound.current?.context.close();
@@ -90,6 +122,9 @@ function SoundToggle() {
         if (!AudioContext) return;
         const context = new AudioContext();
         const gain = context.createGain();
+        const effects = context.createGain();
+        effects.gain.value = 0;
+        effects.connect(context.destination);
         gain.gain.value = 0;
         gain.connect(context.destination);
         [110, 164.81, 220.25].forEach((frequency) => {
@@ -99,11 +134,13 @@ function SoundToggle() {
           oscillator.connect(gain);
           oscillator.start();
         });
-        sound.current = { context, gain };
+        sound.current = { context, gain, effects, enabled:false };
       }
       const { context, gain } = sound.current;
       await context.resume();
       gain.gain.setTargetAtTime(enabled ? 0 : 0.018, context.currentTime, 0.4);
+      sound.current.enabled = !enabled;
+      sound.current.effects.gain.setTargetAtTime(enabled ? 0 : 1, context.currentTime, .03);
       setEnabled(!enabled);
     } catch {
       setEnabled(false);
@@ -164,11 +201,11 @@ function Dialog({ label, onClose, children, className = "" }) {
 }
 
 function Inquiry({ initial, onClose }) {
-  const [service, setService] = useState(initial || "Weddings & celebrations");
+  const [service, setService] = useState((typeof initial === "object" ? initial.service : initial) || "Weddings & celebrations");
   const [submitted, setSubmitted] = useState(false);
   const [url, setUrl] = useState("");
   const [brief, setBrief] = useState("");
-  const [formValues, setFormValues] = useState({});
+  const [formValues, setFormValues] = useState(typeof initial === "object" ? {details:initial.details} : {});
   const submit = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -388,14 +425,11 @@ export default function App() {
   }, [reduced]);
 
   useEffect(() => {
-    if (menu || activeService || inquiry !== null) lenis.current?.stop();
+    if (!ready || menu || activeService || inquiry !== null) lenis.current?.stop();
     else lenis.current?.start();
-  }, [menu, activeService, inquiry]);
+  }, [ready, menu, activeService, inquiry]);
 
-  useEffect(() => {
-    const timer = setTimeout(onReady, 3000);
-    return () => clearTimeout(timer);
-  }, [onReady]);
+  useEffect(() => { if(ready) ScrollTrigger.refresh(); }, [ready]);
 
   useEffect(() => {
     const update = () =>
@@ -440,11 +474,7 @@ export default function App() {
       <a className="skip-link" href="#about">
         Skip to content
       </a>
-      <div className="loading-screen" aria-hidden={ready}>
-        <Mark />
-        <span className="mono">MAKING ROOM FOR EXTRAORDINARY</span>
-        <div className="loading-line" />
-      </div>
+      <BackstageLoader reduced={reduced} onReady={onReady} />
       <header className={`header ${solidHeader ? "header-solid" : ""}`}>
         <Brand />
         <span className="header-note mono">
@@ -475,7 +505,6 @@ export default function App() {
               <Suspense fallback={null}>
                 <WeddingStage
                   reduced={reduced}
-                  onReady={onReady}
                   onPhase={onPhase}
                 />
               </Suspense>
@@ -519,7 +548,7 @@ export default function App() {
                     "001 / THE EMPTY CANVAS",
                     "002 / COMING TO LIFE",
                     "003 / THE FINAL REVEAL",
-                    "004 / THE CELEBRATION IN MOTION",
+                    "004 / LIGHTS. LIFE. CELEBRATION.",
                   ][phase]
                 }
               </span>
@@ -810,6 +839,9 @@ export default function App() {
           </div>
         </section>
 
+
+        <Suspense fallback={null}><EventExperiences reduced={reduced} onPlan={openInquiry} /></Suspense>
+
         <section
           className="process section-light"
           id="approach"
@@ -922,6 +954,16 @@ export default function App() {
           </div>
         </section>
       </main>
+      <aside className="instagram-connect" aria-label="Explore our photo gallery">
+        <div><span className="mono">REAL MOMENTS / THE MICEFACTORY COLLECTION</span><p>Every frame, a feeling.</p></div>
+        <a href="/gallery"><span>EXPLORE OUR GALLERY<b>Weddings. Stages. Celebrations.</b></span><Arrow diagonal /></a>
+      </aside>
+      <aside className="instagram-connect" aria-label="Follow our events on Instagram">
+        <div><span className="mono">MORE MOMENTS. MORE INSPIRATION.</span><p>See what we’re creating.</p></div>
+        <a href="https://www.instagram.com/teammicefactory/" target="_blank" rel="noopener noreferrer" aria-label="Visit @teammicefactory on Instagram (opens in a new tab)">
+          <span>INSTAGRAM <b>@teammicefactory</b></span><Arrow diagonal />
+        </a>
+      </aside>
       <footer className="footer section-dark">
         <Brand footer />
         <div className="footer-right mono">
@@ -933,6 +975,7 @@ export default function App() {
         </div>
       </footer>
 
+      <Suspense fallback={null}><AdvancedCursor reduced={reduced} /></Suspense>
       <Suspense fallback={null}><CosmicOutro reduced={reduced} onRestart={restartExperience} /></Suspense>
 
       {menu && (
@@ -945,12 +988,15 @@ export default function App() {
             PEOPLE. IDEAS. SPACES. EXPERIENCES.
           </span>
           <nav aria-label="Main navigation">
+            <a href="/gallery"><span className="mono">G</span>Gallery<Arrow diagonal /></a>
             {[
               ["01", "Our story", "#about"],
               ["02", "Expertise", "#expertise"],
               ["03", "Experiences", "#experiences"],
               ["04", "Our approach", "#approach"],
               ["05", "Let’s talk", "#contact"],
+              ["06", "Inspiration", "#inspiration"],
+              ["07", "Build your brief", "#event-planner"],
             ].map(([n, label, target]) => (
               <a
                 key={n}

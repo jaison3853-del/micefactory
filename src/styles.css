@@ -2566,3 +2566,26 @@ button {
 .cosmic-restart span { display:block; margin-top:14px; font-size:22px; }
 .cosmic-reduced { height:100svh; }
 @media(max-width:759px) { .cosmic-caption { font-size:7px; } .cosmic-orbit { width:130vw; height:48vw; left:-15%; } .cosmic-wordmark p { letter-spacing:.01em; margin-top:14px; } .cosmic-restart { font-size:7px; } .film-play { font-size:7px; padding:8px 12px; } }
+
+/* Light resolves into the existing cosmic signature as the page ends. */
+.cosmic-entry-glow {position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 0%,#c2a66a55,transparent 65%);opacity:calc(1 - var(--arrival,0));}
+.cosmic-seed-field {position:absolute;width:clamp(180px,31vw,450px);aspect-ratio:1;pointer-events:none;opacity:calc(1 - var(--assemble,0));}
+.cosmic-seed-field i {position:absolute;width:4px;height:4px;border-radius:50%;background:#fff4d2;box-shadow:0 0 14px 3px #e3ca8a88;transform:translate(calc(var(--seed-x) * (1 - var(--assemble,0))),calc(var(--seed-y) * (1 - var(--assemble,0))));}
+.cosmic-reduced .cosmic-seed-field,.cosmic-reduced .cosmic-entry-glow {display:none;}
+@media(prefers-reduced-motion:reduce){.cosmic-seed-field,.cosmic-entry-glow{display:none;}}
+
+/* Direct public profile link; no Instagram scripts or account access required. */
+.instagram-connect {display:flex;justify-content:space-between;align-items:center;gap:24px;padding:40px 6vw;background:#141a15;border-top:1px solid #d2bc8730;color:#eee9db;}
+.instagram-connect .mono {font-size:11px;letter-spacing:.08em;color:#c9b88d;}
+.instagram-connect p {font-size:clamp(22px,3vw,36px);margin:12px 0 0;letter-spacing:-.035em;}
+.instagram-connect a {display:flex;align-items:center;gap:32px;min-height:64px;padding:16px 24px;border:1px solid #c9b88d70;border-radius:8px;color:#e5d3aa;}
+.instagram-connect a span {font:11px "IBM Plex Mono",monospace;}
+.instagram-connect a b {display:block;margin-top:8px;font:500 18px "Manrope Variable",sans-serif;}
+.instagram-connect a svg {width:24px;height:24px;}
+.instagram-connect a:hover {background:#d3ba8917;border-color:#e5d3aa;}
+.instagram-connect a:focus-visible {outline:2px solid #e5d3aa;outline-offset:5px;}
+@media(max-width:759px) {
+ #root .instagram-connect {padding:32px 20px;align-items:stretch;flex-direction:column;}
+ #root .instagram-connect .mono {font-size:12px;line-height:1.6;}
+ #root .instagram-connect a {justify-content:space-between;}
+}
